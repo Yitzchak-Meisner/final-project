@@ -3,7 +3,7 @@ import multer from 'multer';
 import cors from 'cors';
 import { v4 as uuidv4 } from 'uuid';
 
-import pool from '../../db/db.js';
+import pool from '../db/db.js';
 const app = express();
 
 app.use(cors());
@@ -26,23 +26,24 @@ app.post('/api/upload', upload.single("image"),  async (req, res) => {
     const path = req.file?.path;
     const { category, dateNow } = req.body;
     console.log([ id, path, category, dateNow ]);
+    // res.send("File uploaded");
 
     try {
-        const result = await pool.query('INSERT INTO images (id, image_url, category, dateNow) VALUES ($1, $2, $3, $4) RETURNING *;', [id, path, category, dateNow]);
-        console.log(result);
+        const result = await pool.query('INSERT INTO images (id, image_url, category, created_date) VALUES ($1, $2, $3, $4) RETURNING *;', [id, path, category, dateNow]);
+        // console.log(result);
         
         res.send(result.rows).status(201);
+        return
     } catch (err) {
-        // Type check the error
         if (err instanceof Error) {
             console.error(err.message);
         } else {
             console.error('An unknown error occurred');
         }
         res.status(500).send('Server Error');
+        return;
     }
     
-    res.send("File uploaded");
 })
 
 
