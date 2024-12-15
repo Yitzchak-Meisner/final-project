@@ -1,12 +1,14 @@
 import ImageUpload from "../components/ImageUpload";
-import PlusButton from "../components/plusButton";
+import PlusButton from "../components/PlusButton";
 
 const BatMitzvah = () => {
   return (
     <div>
       <h1>Bat Mitzvah</h1>
-      <ImageUpload/>
-      <PlusButton/>
+      <PlusButton 
+        popupTitle="העלאת תמונה" 
+        popupContent={<ImageUpload />}
+      />
     </div>
   )
 }
