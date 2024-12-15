@@ -1,50 +1,39 @@
-// src/components/ImageUpload.jsx
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
+import { Upload } from 'lucide-react';
 import axios from 'axios';
+import styles from '../styles/ImageUpload.module.css';
 
 const ImageUpload = () => {
-  const location = useLocation(); // קבלת המיקום הנוכחי מהנתיב
-  const category = location.pathname.split('/').filter(Boolean).pop(); // חילוץ המילה האחרונה
+  const location = useLocation();
+  const category = location.pathname.split('/').filter(Boolean).pop();
   
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
+  const [isDragging, setIsDragging] = useState(false);
+  const fileInputRef = useRef(null);
 
-  // טיפול בבחירת קובץ
-  const handleFileSelect = (event) => {
-    const file = event.target.files[0];
+  const handleFileSelect = (file) => {
     if (file && file.type.startsWith('image/')) {
       setSelectedFile(file);
-      // יצירת תצוגה מקדימה של התמונה
-      const reader = new FileReader();     
-      console.log(reader);
-      
+      const reader = new FileReader();
       reader.onload = () => setPreviewUrl(reader.result);
       reader.readAsDataURL(file);
       setMessage('');
+      handleUpload(file);
     } else {
-      setMessage('please select an image file, not a ' + file.type);
+      setMessage('נא לבחור קובץ תמונה, ולא ' + file?.type);
     }
   };
 
-  // טיפול בהעלאת הקובץ
-  const handleUpload = async () => {
-    if (!selectedFile) {
-      setMessage('please select an image file');
-      return;
-    }
-
+  const handleUpload = async (file) => {
     const formData = new FormData();
-    formData.append('image', selectedFile);
+    formData.append('image', file);
     formData.append('category', category);
     formData.append('dateNow', new Date().toISOString());
     
-    for (let [key, value] of formData.entries()) {
-      console.log(`${key}:`, value); // מדפיס כל מפתח וערך
-    }
-
     setLoading(true);
 
     try {
@@ -53,59 +42,103 @@ const ImageUpload = () => {
           'Content-Type': 'multipart/form-data'
         }
       });
-
-      setMessage('the image was uploaded successfully!');
-
-      // איפוס הטופס
-      setSelectedFile(null);
-      setPreviewUrl(null);
+      setMessage('התמונה הועלתה בהצלחה!');
     } catch (error) {
-      setMessage('error uploading image: ' + (error.response?.data?.message || error.message));
+      setMessage('שגיאה בהעלאת התמונה: ' + (error.response?.data?.message || error.message));
     } finally {
       setLoading(false);
     }
   };
 
-  return (
-    <div>
-      <h2>upload an image for category: {category}</h2>
+  const handleDragEnter = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+  };
 
-      <div>
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+
+    const file = e.dataTransfer.files[0];
+    handleFileSelect(file);
+  };
+
+  const handleClick = () => {
+    fileInputRef.current.click();
+  };
+
+  return (
+    <div className={styles.container}>
+      <h2 className={styles.title}>העלאת תמונה לקטגוריה: {category}</h2>
+
+      <div
+        className={`${styles.dropzone} 
+          ${isDragging ? styles.dropzoneDragging : ''} 
+          ${loading ? styles.dropzoneDisabled : ''}`}
+        onClick={handleClick}
+        onDragEnter={handleDragEnter}
+        onDragLeave={handleDragLeave}
+        onDragOver={handleDragOver}
+        onDrop={handleDrop}
+      >
         <input
+          ref={fileInputRef}
           type="file"
           accept="image/*"
-          onChange={handleFileSelect}
+          onChange={(e) => handleFileSelect(e.target.files[0])}
+          className={styles.hiddenInput}
         />
+
+        {selectedFile ? (
+          <div>
+            <img
+              src={URL.createObjectURL(selectedFile)}
+              alt="תצוגה מקדימה"
+              className={styles.previewImage}
+            />
+            <div className={styles.fileInfo}>
+              <p>שם הקובץ: {selectedFile.name}</p>
+              <p>גודל: {(selectedFile.size / 1024 / 1024).toFixed(2)} MB</p>
+            </div>
+          </div>
+        ) : (
+          <div>
+            <Upload className={styles.uploadIcon} />
+            <p className={styles.uploadText}>
+              גרור תמונה לכאן או לחץ לבחירה
+            </p>
+          </div>
+        )}
+
+        {loading && (
+          <div className={styles.loadingOverlay}>
+            <div className={styles.loadingText}>מעלה...</div>
+          </div>
+        )}
       </div>
 
-      {previewUrl && (
-        <div>
-          <img
-            src={previewUrl}
-            alt="preview"
-            style={{ maxWidth: '300px', marginTop: '10px' }}
-          />
-        </div>
+      {message && (
+        <p className={`${styles.message} ${
+          message.includes('שגיאה') ? styles.errorMessage : styles.successMessage
+        }`}>
+          {message}
+        </p>
       )}
-
-      {selectedFile && (
-        <div>
-          <p>file name: {selectedFile.name}</p>
-          <p>file size: {(selectedFile.size / 1024 / 1024).toFixed(2)} MB</p>
-        </div>
-      )}
-
-      <button
-        onClick={handleUpload}
-        disabled={!selectedFile || loading}
-      >
-        {loading ? 'Uploading...' : 'Upload'}
-      </button>
-
-      {message && <p>{message}</p>}
     </div>
   );
 };
 
 export default ImageUpload;
-
