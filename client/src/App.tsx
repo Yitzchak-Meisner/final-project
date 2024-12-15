@@ -7,7 +7,7 @@ import FloorBar from './pages/FloorBarPage';
 import TableBar from './pages/TableBarPage';
 import HomeBoutiqueEvents from './pages/HomeBoutiqueEventsPage';
 import LuxuryEvents from './pages/LuxuryEventsPage';
-import BatMitzvah from './pages/BatMitzvahPage';
+import BatMitzvah, { loader as batMitzvahLoader } from "./pages/BatMitzvahPage";
 import AboutUs from './pages/AboutUsPage';
 import ContactUs from './pages/ContactUsPage';
 import NavbarComponent from './components/Navbar';
@@ -37,7 +37,7 @@ const router = createBrowserRouter([
       },
       { path: 'home-boutique-events', element: <HomeBoutiqueEvents /> },
       { path: 'luxury-events', element: <LuxuryEvents /> },
-      { path: 'bat-mitzvah', element: <BatMitzvah /> },
+      { path: 'bat-mitzvah', element: <BatMitzvah />, loader: batMitzvahLoader },
       { path: 'about-us', element: <AboutUs /> },
       { path: 'contact-us', element: <ContactUs /> },
       { path: '*', element: <div>Page Not Found</div> },
