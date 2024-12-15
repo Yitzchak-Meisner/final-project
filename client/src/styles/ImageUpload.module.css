@@ -1,0 +1,89 @@
+.container {
+  padding: 1rem;
+}
+
+.title {
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.dropzone {
+  position: relative;
+  border: 2px dashed #e5e7eb;
+  border-radius: 0.5rem;
+  padding: 2rem;
+  text-align: center;
+  cursor: pointer;
+}
+
+.dropzone:hover {
+  border-color: #9ca3af;
+}
+
+.dropzoneDragging {
+  border-color: #3b82f6;
+  background-color: #eff6ff;
+}
+
+.dropzoneDisabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.hiddenInput {
+  display: none;
+}
+
+.previewImage {
+  max-width: 24rem;
+  margin: 0 auto;
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.fileInfo {
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  color: #4b5563;
+}
+
+.uploadIcon {
+  width: 3rem;
+  height: 3rem;
+  margin: 0 auto;
+  color: #9ca3af;
+}
+
+.uploadText {
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  color: #4b5563;
+}
+
+.loadingOverlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.75);
+  border-radius: 0.5rem;
+}
+
+.loadingText {
+  color: #3b82f6;
+}
+
+.message {
+  margin-top: 1rem;
+  font-size: 0.875rem;
+}
+
+.errorMessage {
+  color: #ef4444;
+}
+
+.successMessage {
+  color: #22c55e;
+}
