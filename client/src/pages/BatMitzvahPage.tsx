@@ -2,20 +2,18 @@ import ImageUpload from "../components/ImageUpload";
 import PlusButton from "../components/PlusButton";
 import { fetchImagesByCategory } from "../api/FetchingImages";
 import { useLoaderData } from "react-router-dom";
-import Display from "../components/Display";
+import CardsDisplay from "../components/CardsDisplay";
 
 export default function BatMitzvah() {
 
   const images = useLoaderData();
-  console.log(images);
-  console.log(Image)
 
   return (
     <div>
       <h1>Bat Mitzvah</h1>
 
       {/* הצגת התמונות */}
-      <Display images={images} />
+      <CardsDisplay images={images} />
 
 
       <PlusButton 

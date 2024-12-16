@@ -10,16 +10,6 @@
             "server": "localhost",
             "port": 5432,
             "driver": "PostgreSQL",
-            "name": "Users-Tasks",
-            "database": "postgres",
-            "username": "PUT",
-            "password": "1234"
-        },
-        {
-            "previewLimit": 50,
-            "server": "localhost",
-            "port": 5432,
-            "driver": "PostgreSQL",
             "name": "final-project",
             "database": "postgres",
             "username": "yitzchak",

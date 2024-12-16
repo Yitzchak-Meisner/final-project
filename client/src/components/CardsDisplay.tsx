@@ -2,7 +2,7 @@ import { Container, Row, Col } from 'react-bootstrap';
 import { Heart } from 'lucide-react';
 import { useState } from 'react';
 
-const Display = ({ images }) => {
+const CardsDisplay = ({ images }) => {
   // מערך שמכיל את ה-ID של התמונות שסומנו בלייק
   const [likedImages, setLikedImages] = useState(new Set());
 
@@ -62,4 +62,4 @@ const Display = ({ images }) => {
   );
 };
 
-export default Display;
+export default CardsDisplay;
