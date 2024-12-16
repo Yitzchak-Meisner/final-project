@@ -42,7 +42,6 @@ const Display = ({ images }) => {
                 <button
                   onClick={() => handleLike(img.id)}
                   className="bottom-0 m-2 bg-transparent border-0"
-                  style={{ cursor: 'pointer' }}
                 >
                   <Heart
                     size={24}
