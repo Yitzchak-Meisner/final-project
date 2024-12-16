@@ -1,144 +1,64 @@
-import { useState, useRef } from 'react';
-import { useLocation } from 'react-router-dom';
-import { Upload } from 'lucide-react';
+import { useState } from 'react';
 import axios from 'axios';
-import styles from '../styles/ImageUpload.module.css';
+import { useLocation } from 'react-router-dom';
 
-const ImageUpload = () => {
+const UploadImageComponent = () => {
+  const [image, setImage] = useState(null); // מחרוזת Base64
+  const [uploadDate, setUploadDate] = useState(new Date());
   const location = useLocation();
   const category = location.pathname.split('/').filter(Boolean).pop();
-  
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [previewUrl, setPreviewUrl] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState('');
-  const [isDragging, setIsDragging] = useState(false);
-  const fileInputRef = useRef(null);
 
-  const handleFileSelect = (file) => {
-    if (file && file.type.startsWith('image/')) {
-      setSelectedFile(file);
+  const handleImageChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
       const reader = new FileReader();
-      reader.onload = () => setPreviewUrl(reader.result);
+      reader.onloadend = () => {
+        setImage(reader.result); // שמירה של מחרוזת Base64
+      };
       reader.readAsDataURL(file);
-      setMessage('');
-      handleUpload(file);
-    } else {
-      setMessage('נא לבחור קובץ תמונה, ולא ' + file?.type);
     }
   };
 
-  const handleUpload = async (file) => {
-    const formData = new FormData();
-    formData.append('image', file);
-    formData.append('category', category);
-    formData.append('dateNow', new Date().toISOString());
-    
-    setLoading(true);
+  const handleUpload = async () => {
+    if (!image) {
+      alert('Please select an image to upload.');
+      return;
+    }
+
+    const payload = {
+      image, // מחרוזת Base64
+      category,
+      uploadDate: uploadDate.toISOString(),
+    };
 
     try {
-      const response = await axios.post('http://localhost:3000/api/upload', formData, {
+      const response = await axios.post('http://localhost:3000/api/upload', payload, {
         headers: {
-          'Content-Type': 'multipart/form-data'
-        }
+          'Content-Type': 'application/json',
+        },
       });
-      setMessage('התמונה הועלתה בהצלחה!');
+      alert('Image uploaded successfully!');
+      console.log('Response:', response.data);
     } catch (error) {
-      setMessage('שגיאה בהעלאת התמונה: ' + (error.response?.data?.message || error.message));
-    } finally {
-      setLoading(false);
+      console.error('Error uploading image:', error);
+      alert('Failed to upload image.');
     }
-  };
-
-  const handleDragEnter = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDragging(true);
-  };
-
-  const handleDragLeave = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDragging(false);
-  };
-
-  const handleDragOver = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-  };
-
-  const handleDrop = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDragging(false);
-
-    const file = e.dataTransfer.files[0];
-    handleFileSelect(file);
-  };
-
-  const handleClick = () => {
-    fileInputRef.current.click();
   };
 
   return (
-    <div className={styles.container}>
-      <h2 className={styles.title}>העלאת תמונה לקטגוריה: {category}</h2>
-
-      <div
-        className={`${styles.dropzone} 
-          ${isDragging ? styles.dropzoneDragging : ''} 
-          ${loading ? styles.dropzoneDisabled : ''}`}
-        onClick={handleClick}
-        onDragEnter={handleDragEnter}
-        onDragLeave={handleDragLeave}
-        onDragOver={handleDragOver}
-        onDrop={handleDrop}
-      >
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="image/*"
-          onChange={(e) => handleFileSelect(e.target.files[0])}
-          className={styles.hiddenInput}
+    <div>
+      <h1>Upload Image</h1>
+      <input type="file" accept="image/*" onChange={handleImageChange} />
+      <button onClick={handleUpload}>Upload</button>
+      {image && (
+        <img
+          src={image} // שימוש ב-Base64 כתמונה
+          alt="Preview"
+          style={{ maxWidth: '200px', maxHeight: '200px' }}
         />
-
-        {selectedFile ? (
-          <div>
-            <img
-              src={URL.createObjectURL(selectedFile)}
-              alt="תצוגה מקדימה"
-              className={styles.previewImage}
-            />
-            <div className={styles.fileInfo}>
-              <p>שם הקובץ: {selectedFile.name}</p>
-              <p>גודל: {(selectedFile.size / 1024 / 1024).toFixed(2)} MB</p>
-            </div>
-          </div>
-        ) : (
-          <div>
-            <Upload className={styles.uploadIcon} />
-            <p className={styles.uploadText}>
-              גרור תמונה לכאן או לחץ לבחירה
-            </p>
-          </div>
-        )}
-
-        {loading && (
-          <div className={styles.loadingOverlay}>
-            <div className={styles.loadingText}>מעלה...</div>
-          </div>
-        )}
-      </div>
-
-      {message && (
-        <p className={`${styles.message} ${
-          message.includes('שגיאה') ? styles.errorMessage : styles.successMessage
-        }`}>
-          {message}
-        </p>
       )}
     </div>
   );
 };
 
-export default ImageUpload;
+export default UploadImageComponent;
