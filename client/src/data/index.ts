@@ -6,7 +6,7 @@ export const navLinks = [
     },
     {
       id: 2,
-      path: 'table-centerpieces',
+      path: 'categories/table-centerpieces',
       text: 'מרכזי שולחן',
     },
     {
@@ -16,17 +16,17 @@ export const navLinks = [
     },
     {
       id: 4,
-      path: 'home-boutique-events',
+      path: 'categories/home-boutique-events',
       text: 'אירועי בוטיק ביתי',
     },
     {
       id: 5,
-      path: 'luxury-events',
+      path: 'categories/luxury-events',
       text: 'אירועי יוקרה',
     },
     {
       id: 6,
-      path: 'bat-mitzvah',
+      path: 'categories/bat-mitzvah',
       text: 'בת-מצווה',
     },
     {
