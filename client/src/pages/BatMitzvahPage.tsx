@@ -1,14 +1,30 @@
 import ImageUpload from "../components/ImageUpload";
-import PlusButton from "../components/plusButton";
+import PlusButton from "../components/PlusButton";
+import { fetchImagesByCategory } from "../api/FetchingImages";
+import { useLoaderData } from "react-router-dom";
+import CardsDisplay from "../components/CardsDisplay";
 
-const BatMitzvah = () => {
+export default function BatMitzvah() {
+
+  const images = useLoaderData();
+
   return (
     <div>
       <h1>Bat Mitzvah</h1>
-      <ImageUpload/>
-      <PlusButton/>
+
+      {/* הצגת התמונות */}
+      <CardsDisplay images={images} />
+
+
+      <PlusButton 
+        popupTitle="העלאת תמונה" 
+        popupContent={<ImageUpload />}
+      />
     </div>
   )
 }
 
-export default BatMitzvah
+export async function loader({ params }: { params: { category: string }}) {
+  const category = params.category || "bat-mitzvah";
+  return fetchImagesByCategory(category);
+}
