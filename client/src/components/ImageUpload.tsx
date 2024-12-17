@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { Upload } from 'react-bootstrap-icons'; // שימוש באייקון מ-react-bootstrap
 import '../styles/ImageUpload.css'; // הקובץ עם ה-CSS החדש
@@ -10,8 +10,7 @@ const UploadImageComponent = () => {
   const [message, setMessage] = useState(''); // state להצגת הודעות
   const [isDragging, setIsDragging] = useState(false); // בודק אם קובץ נגרר מעל האזור
   const fileInputRef = useRef(null);
-  const location = useLocation();
-  const category = location.pathname.split('/').filter(Boolean).pop();
+  const { category } = useParams();
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
