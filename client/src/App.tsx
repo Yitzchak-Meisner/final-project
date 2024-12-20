@@ -5,6 +5,7 @@ import Bars from './pages/BarsPage';
 import Categories, { loader as categoriesLoader } from './pages/CategoriesPage';
 import AboutUs from './pages/AboutUsPage';
 import ContactUs from './pages/ContactUsPage';
+import LogIn from './pages/LogInPage';
 import NavbarComponent from './components/Navbar';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -25,6 +26,7 @@ const router = createBrowserRouter([
       { path: 'categories/:category', element: <Categories />, loader: categoriesLoader },
       { path: 'about-us', element: <AboutUs /> },
       { path: 'contact-us', element: <ContactUs /> },
+      { path: 'login', element: <LogIn /> },
       { path: '*', element: <div>Page Not Found</div> },
     ],
   },

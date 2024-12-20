@@ -1,15 +1,38 @@
 import ImageUpload from "../components/ImageUpload";
 import PlusButton from "../components/PlusButton";
-import { fetchImagesByCategory } from "../api/FetchingImages";
+import { fetchImagesByCategory, Image } from "../api/FetchingImages";
+import { deleteImage } from "../api/DeleteImages";
 import { useLoaderData } from "react-router-dom";
 import CardsDisplay from "../components/CardsDisplay";
+import DraggableCards from "../components/DraggableCards";
 import { navLinks } from "../data/index";
+import type { Params } from "react-router-dom";
+import { useEffect, useState } from "react";
+
 
 export default function Categories() {
-    
-  const images = useLoaderData();
 
-  const category = images?.[0]?.category;
+  const admin = localStorage.getItem('token');
+
+  const imagesFromDB = useLoaderData();
+  
+  const [images, setImages] = useState<Image[]>(imagesFromDB);
+  
+  useEffect(() => {
+    setImages(imagesFromDB);
+  } , [imagesFromDB]);
+
+  const handleDelete = async (imageId: string) => {
+    try {
+      await deleteImage(imageId); // מחיקה מהשרת
+      setImages((prevImages) => prevImages.filter((img) => img.id !== imageId)); // עדכון ה-State
+    } catch (error) {
+      console.error("Error deleting image:", error);
+    }
+  };
+
+
+  const category = images[0].category;
 
   const categoryName = (() => {
     if (!category) return "טוען..."; // ערך ברירת מחדל בזמן טעינה
@@ -24,17 +47,25 @@ export default function Categories() {
       <h1>{categoryName}</h1>
 
       {/* הצגת התמונות */}
-      <CardsDisplay images={images} />
-
-      <PlusButton 
-        popupTitle="העלאת תמונה"
-        popupContent={<ImageUpload />}
-      />
+        {/* <DraggableCards images={images} setImages={setImages} /> */}
+        <CardsDisplay images={images} deleteImg={handleDelete} />
+        {admin ? <>
+          <PlusButton 
+          popupTitle="העלאת תמונה"
+          popupContent={<ImageUpload />}
+          />
+        </> : null}
     </div>
   )
 }
 
-export async function loader({ params }: { params: { category: string }}) {
+export async function loader({ params }: { params: Params<string>}) {
   const category = params.category;
+
+  if (!category) {
+    throw new Error('No category specified.');
+  }
+
+
   return fetchImagesByCategory(category);
 }
