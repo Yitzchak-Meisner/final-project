@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-interface Image {
+export interface Image {
     id: string;
     image_url: string;
     category: string;

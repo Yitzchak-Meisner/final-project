@@ -2,3 +2,18 @@
     height: 50px;
     width: auto;
 }
+
+.login-button {
+    margin-right: 1vw;
+}
+
+@media (max-width: 1200px) {
+    .navbar-brand {
+        margin-left: auto;
+    }
+
+    .navbar-toggler {
+        border: none;
+        padding: 4px;
+    }
+}

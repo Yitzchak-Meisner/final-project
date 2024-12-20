@@ -8,7 +8,7 @@ const Bars = () => {
         <Link to='/categories/floor-bar'>בר ריצפתי</Link>
         <Link to='/categories/table-bar'>בר שולחני</Link>
       </nav>
-      <Outlet />
+      {/* <Outlet /> */}
     </div>
   )
 }

@@ -43,7 +43,7 @@ const UploadImageComponent = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post('http://localhost:3000/api/upload', payload, {
+      const response = await axios.post('http://localhost:3000/api/pictures/upload', payload, {
         headers: {
           'Content-Type': 'application/json',
         },

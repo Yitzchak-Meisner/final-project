@@ -1,23 +1,26 @@
 import { Container, Row, Col } from 'react-bootstrap';
-import { Heart } from 'lucide-react';
-import { useState } from 'react';
+import { Heart, Trash2 } from 'lucide-react';
+// import { deleteImage } from "../api/DeleteImages";
+// import { useState } from 'react';
 
-const CardsDisplay = ({ images }) => {
-  // מערך שמכיל את ה-ID של התמונות שסומנו בלייק
-  const [likedImages, setLikedImages] = useState(new Set());
+const CardsDisplay = ({ images, deleteImg }) => {
 
-  // פונקציה לטיפול בלחיצה על הלב
-  const handleLike = (imageId) => {
-    setLikedImages(prevLiked => {
-      const newLiked = new Set(prevLiked);
-      if (newLiked.has(imageId)) {
-        newLiked.delete(imageId);
-      } else {
-        newLiked.add(imageId);
-      }
-      return newLiked;
-    });
-  };
+  const admin = localStorage.getItem('token');
+  
+  // // מערך שמכיל את ה-ID של התמונות שסומנו בלייק
+  // const [likedImages, setLikedImages] = useState(new Set());
+  // // פונקציה לטיפול בלחיצה על הלב
+  // const handleLike = (imageId) => {
+  //   setLikedImages(prevLiked => {
+  //     const newLiked = new Set(prevLiked);
+  //     if (newLiked.has(imageId)) {
+  //       newLiked.delete(imageId);
+  //     } else {
+  //       newLiked.add(imageId);
+  //     }
+  //     return newLiked;
+  //   });
+  // };
 
   return (
     <Container fluid className="p-4">
@@ -37,9 +40,9 @@ const CardsDisplay = ({ images }) => {
                   }}
                 />
                 <h5 className="card-title mt-3">{img.category}</h5>
-                
+                {admin ? <Trash2 onClick = {() => deleteImg(img.id)}/> : null}
                 {/* כפתור הלב */}
-                <button
+                {/* <button
                   onClick={() => handleLike(img.id)}
                   className="bottom-0 m-2 bg-transparent border-0"
                 >
@@ -52,7 +55,7 @@ const CardsDisplay = ({ images }) => {
                       transform: likedImages.has(img.id) ? 'scale(1.1)' : 'scale(1)'
                     }}
                   />
-                </button>
+                </button> */}
               </div>
             </div>
           </Col>
