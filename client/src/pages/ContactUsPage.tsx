@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Container, Row, Col, Form, Button, Alert } from 'react-bootstrap';
+import { addMessage } from '../api/api-managingMessages';
 
 const ContactUs = () => {
   const [formMode, setFormMode] = useState('contact');
@@ -43,6 +44,7 @@ const ContactUs = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validateForm()) {
+      addMessage(formData);
       console.log('נתוני הטופס:', formData);
       setSubmissionStatus('success');
       setFormData({ name: '', email: '', message: '', recommendation: '' });

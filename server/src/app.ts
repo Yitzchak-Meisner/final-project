@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import picturesRouter from './api/api-pictures';
 import usersRouter from './api/api-users';
+import messagesRouter from './api/api-messages';
 
 const app = express();
 
@@ -12,6 +13,7 @@ app.use(express.urlencoded({ limit: '20mb', extended: true }));
 
 app.use('/api/pictures', picturesRouter);
 app.use('/api/users', usersRouter);
+app.use('/api/messages', messagesRouter);
 
 
 app.listen(3000, () => {
