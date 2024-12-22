@@ -3,11 +3,14 @@ import pool from '../db/db';
 import bcrypt from 'bcrypt'; // לשיבוש הסיסמה
 import jwt from 'jsonwebtoken'; // ליצור טוקני כניסה
 import { v4 as uuidv4 } from 'uuid';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const router = express.Router();
 
 // סוד לטוקן JWT
-const JWT_SECRET = '1234567890';
+const JWT_SECRET = process.env.JWT_SECRET;
 
 router.get('/', async (req, res) => {
     console.log('hello');
