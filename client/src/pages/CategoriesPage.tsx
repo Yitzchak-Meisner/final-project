@@ -4,7 +4,7 @@ import { fetchImagesByCategory, Image } from "../api/FetchingImages";
 import { deleteImage } from "../api/DeleteImages";
 import { useLoaderData } from "react-router-dom";
 import CardsDisplay from "../components/CardsDisplay";
-import DraggableCards from "../components/DraggableCards";
+// import DraggableCards from "../components/DraggableCards";
 import { navLinks } from "../data/index";
 import type { Params } from "react-router-dom";
 import { useEffect, useState } from "react";

@@ -6,6 +6,7 @@ import Categories, { loader as categoriesLoader } from './pages/CategoriesPage';
 import AboutUs from './pages/AboutUsPage';
 import ContactUs from './pages/ContactUsPage';
 import LogIn from './pages/LogInPage';
+import MessagesDashboard, { loader as messagesLoader } from './pages/MessagesDashboardPage';
 import NavbarComponent from './components/Navbar';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -27,6 +28,7 @@ const router = createBrowserRouter([
       { path: 'about-us', element: <AboutUs /> },
       { path: 'contact-us', element: <ContactUs /> },
       { path: 'login', element: <LogIn /> },
+      { path: 'messages', element: <MessagesDashboard />, loader: messagesLoader },
       { path: '*', element: <div>Page Not Found</div> },
     ],
   },
@@ -41,4 +43,4 @@ function App() {
   )
 }
 
-export default App
+export default App;
