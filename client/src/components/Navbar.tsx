@@ -8,16 +8,42 @@ import '../styles/Navbar.css';
 const NavbarComponent = () => {
   const [changeColor, setChangeColor] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const token = localStorage.getItem('token');    
-    setIsLoggedIn(!!token);
+   // בדוק את סטטוס ההתחברות בעת הטעינה ומתי משתנה ה localStorage
+   useEffect(() => {
+    const checkLoginStatus = () => {
+      const token = localStorage.getItem('token');
+      const adminStatus = localStorage.getItem('isAdmin');
+      setIsLoggedIn(!!token);
+      setIsAdmin(adminStatus === 'true');
+    };
+
+    // בדוק את סטטוס ההתחברות בעת הטעינה
+    checkLoginStatus();
+
+    // האזן לשינוי סטטוס ההתחברות (שינויים בטאבים אחרים)
+    window.addEventListener('storage', checkLoginStatus);
+    
+    // מאזין אירועים מותאם אישית לכניסה/יציאה (שינויים בטאב הנוכחי)
+    window.addEventListener('authStateChange', checkLoginStatus);
+
+    return () => {
+      window.removeEventListener('storage', checkLoginStatus);
+      window.removeEventListener('authStateChange', checkLoginStatus);
+    };
   }, []);
+
 
   const handleLogout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('isAdmin');
     setIsLoggedIn(false);
+    setIsAdmin(false);
+
+    window.dispatchEvent(new Event('authStateChange'));
+
     navigate('/login');
   };
 
@@ -59,9 +85,37 @@ const NavbarComponent = () => {
           </Navbar.Brand>
           <Navbar.Collapse id='basic-navbar-nav'> {/* אזור שנפתח/נסגר על ידי ה-Toggle, מחזיק את הניווט */}
             <Nav className='mx-auto'> {/* מכולה לפריטי נווט (Nav Items) */}
-              {navLinks.map((Link) => {
+            {navLinks.map((Link) => {
+                // אם זה קישור 'צור קשר'
+                if (Link.path === 'contact-us') {
+                  // אם המשתמש הוא מנהל, מציג 'הודעות'
+                  if (isAdmin) {
+                    return (
+                      <Nav.Link
+                        as={NavLink}
+                        to="/messages"
+                        key="messages"
+                        className='nav-link custom-link'
+                      >
+                        הודעות
+                      </Nav.Link>
+                    );
+                  }
+                  // אם המשתמש אינו מנהל, מציג 'צור קשר'
+                  return (
+                    <Nav.Link
+                      as={NavLink}
+                      to={Link.path}
+                      key={Link.id}
+                      className='nav-link custom-link'
+                    >
+                      {Link.text}
+                    </Nav.Link>
+                  );
+                }
+                // כל שאר הקישורים מוצגים תמיד
                 return (
-                  <Nav.Link // קישורים פנימיים בתפריט הניווט
+                  <Nav.Link
                     as={NavLink}
                     to={Link.path}
                     key={Link.id}

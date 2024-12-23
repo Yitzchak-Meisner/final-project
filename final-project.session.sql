@@ -1,13 +1,4 @@
 -- SELECT * FROM images;
--- DROP TABLE images;
 -- SELECT * FROM users;
--- ALTER TABLE images ADD COLUMN rank SERIAL;
-
--- CREATE TABLE messages (
---     id SERIAL PRIMARY KEY,
---     name VARCHAR(255) NOT NULL,
---     email VARCHAR(255) NOT NULL,
---     message TEXT NOT NULL,
---     status VARCHAR(50) DEFAULT 'new',
---     sended_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
--- );
+-- SELECT * FROM posts;
+-- SELECT * FROM messages;

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Form, Button, Container, Row, Col } from 'react-bootstrap';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
@@ -33,9 +33,20 @@ const LoginPage: React.FC = () => {
       if (response.status === 200) {
         setSuccessMessage('התחברת בהצלחה!');
         setErrorMessage('');
+        console.log(response.data.user);
+        
+        // שמירת נתוני המשתמש
+        if (response.data.user.role === "manager") {
+          localStorage.setItem('isAdmin', 'true');
+          console.log('chcghcjhcjchhhcjhcccgcgchch');
+          
+        }
         localStorage.setItem('token', response.data.token);
-        // navigate('/');
-        window.location.href = '/';
+        
+        // הודעה על שינוי מצב ההתחברות
+        window.dispatchEvent(new Event('authStateChange'));
+        
+        navigate('/');
       }
     } catch (error) {
       // טיפול בשגיאות

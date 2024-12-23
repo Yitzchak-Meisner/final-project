@@ -1,157 +1,212 @@
 import { useState, useRef } from 'react';
-import { useParams } from 'react-router-dom';
+import { Upload } from 'react-bootstrap-icons';
+import '../styles/ImageUpload.css';
+import { links, translateKeyValue } from '../data';
 import axios from 'axios';
-import { Upload } from 'react-bootstrap-icons'; // שימוש באייקון מ-react-bootstrap
-import '../styles/ImageUpload.css'; // הקובץ עם ה-CSS החדש
 
-const UploadImageComponent = () => {
-  const [image, setImage] = useState(null); // מחרוזת Base64
-  const [loading, setLoading] = useState(false); // בודק אם קובץ נטען
-  const [message, setMessage] = useState(''); // state להצגת הודעות
-  const [isDragging, setIsDragging] = useState(false); // בודק אם קובץ נגרר מעל האזור
+const CreatePostForm = () => {
+  const [formData, setFormData] = useState({
+    title: '',
+    description: '',
+    category: '',
+    displayCategory: '',
+    images: [],
+  });
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState('');
+  const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef(null);
-  const { category } = useParams();
 
-  const handleImageChange = (event) => {
-    const file = event.target.files[0];
-    console.log(file);
-    
+  // קטגוריות קבועות
+  const categories: string[] = Object.values(links);
 
-    if (file && file.type.startsWith('image/')) {
-      const reader = new FileReader(); // יצירת אובייקט FileReader לקריאת הקובץ
-      reader.onloadend = () => { // פונקציה שפועלת כאשר קריאת הקובץ מסתיימת
-        setImage(reader.result); // שמירת תוכן הקובץ כתמונת Base64 ב-state 'image'
-      };
-      reader.readAsDataURL(file); // קריאת הקובץ והמרתו למחרוזת Base64
-    } else {
-      setMessage('Please select an image file.');
-    }
-  };
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
 
-  const handleUpload = async () => {
-    if (!image) {
-      setMessage('Please select an image to upload.');
-      return;
-    }
-
-    const payload = {
-      image, // מחרוזת Base64
-      category,
-      uploadDate: new Date().toISOString(),
-    };
-
-    setLoading(true);
-
-    try {
-      const response = await axios.post('http://localhost:3000/api/pictures/upload', payload, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
+    if (name === 'displayCategory') {
+      const englishCategory = translateKeyValue(value);
+      setFormData({
+        ...formData,
+        category: englishCategory || '', // שמירת המפתח באנגלית
+        displayCategory: value, // שמירת הערך בעברית להצגה
       });
-      setMessage('Image uploaded successfully!');
-      console.log('Response:', response.data);
-    } catch (error) {
-      console.error('Error uploading image:', error);
-      setMessage('Failed to upload image.');
-    } finally {
-      setLoading(false);
-    }
+    } else {
+      setFormData({ ...formData, [name]: value });}
   };
 
-  const handleDragEnter = (e) => { //פונקציה זו מופעלת כאשר גוררים קובץ מעל האזור, היא מבטיחה שלא יבוצע ברירת מחדל, ומעדכנת את ה-state כדי להראות שהקובץ נמצא בתהליך גרירה.
+  const handleFileChange = (event) => {
+    const files = Array.from(event.target.files); // המרת FileList למערך
+    const fileReaders = files.map((file) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      return new Promise((resolve) => {
+        reader.onloadend = () => resolve(reader.result);
+      });
+    });
+
+    Promise.all(fileReaders).then((images) => {
+      setFormData({ ...formData, images });
+    });
+  };
+
+  const handleDragEnter = (e) => {
     e.preventDefault();
     e.stopPropagation();
     setIsDragging(true);
   };
 
-  const handleDragLeave = (e) => { // פונקציה זו מופעלת כאשר הקובץ יוצא מאזור הגרירה, ומעדכנת את ה-state כדי לבטל את מצב הגרירה.
+  const handleDragLeave = (e) => {
     e.preventDefault();
     e.stopPropagation();
     setIsDragging(false);
   };
 
-  const handleDragOver = (e) => { // פונקציה זו מבטיחה שמצב גרירה פעיל ימשיך ולא יוביל לאירועים ברירת מחדל.
+  const handleDragOver = (e) => {
     e.preventDefault();
     e.stopPropagation();
   };
 
-  const handleDrop = (e) => { // פונקציה זו מטפלת בשחרור הקובץ באזור הגרירה: היא מונעת פעולות ברירת מחדל, מבטלת את מצב הגרירה, קוראת את הקובץ הנגרר וממירה אותו למחרוזת Base64.
+  const handleDrop = (e) => {
     e.preventDefault();
     e.stopPropagation();
     setIsDragging(false);
 
-    const file = e.dataTransfer.files[0];
-    if (file) {
+    const files = Array.from(e.dataTransfer.files);
+    const fileReaders = files.map((file) => {
       const reader = new FileReader();
-      reader.onloadend = () => {
-        setImage(reader.result); // שמירת התמונה בפורמט Base64
-      };
       reader.readAsDataURL(file);
+      return new Promise((resolve) => {
+        reader.onloadend = () => resolve(reader.result);
+      });
+    });
+
+    Promise.all(fileReaders).then((images) => {
+      setFormData({ ...formData, images });
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    console.log('formData:', formData);
+    
+    e.preventDefault();
+    if (!formData.title || !formData.description || !formData.category || formData.images.length === 0) {
+      setMessage('יש למלא את כל השדות ולהעלות לפחות תמונה אחת.');
+      return;
     }
+
+    setLoading(true);
+
+    try {
+      const response = await axios.post('http://localhost:3000/api/posts/create-posts', {
+        ...formData,
+        displayCategory: undefined, // הסרת שדה התצוגה כדי שלא יישלח לשרת
+        
+      });
+
+      console.log('Response:', response.data);
+    
+      setMessage('הפוסט נוצר בהצלחה!');
+      setFormData({ title: '', description: '', category: '', displayCategory: '', images: [] });
+    } catch (error) {
+      console.error('Error:', error);
+      setMessage('שגיאה בחיבור לשרת.');
+    } finally {
+      setLoading(false);
+    }
+    
   };
 
   const handleClick = () => {
-    console.log("handleClick");
-    
     fileInputRef.current?.click();
   };
 
   return (
     <div className="container">
-      {/* כותרת */}
-      <h1 className="title">Upload Image to category: {category}</h1>
+      <h1 className="title">יצירת פוסט חדש</h1>
 
-      {/* אזור Drag & Drop */}
-      <div
-        className={`dropzone
-          ${isDragging ? 'dropzoneDragging' : ''} 
-          ${loading ? 'dropzoneDisabled' : ''}`}
-        onClick={handleClick}
-        onDragEnter={handleDragEnter}
-        onDragLeave={handleDragLeave}
-        onDragOver={handleDragOver}
-        onDrop={handleDrop}
-      >
-        <input
-          type="file"
-          accept="image/*"
-          onChange={handleImageChange}
-          className="hiddenInput"
-          ref={fileInputRef}
-        />
-        {image ? (
-          <div>
-            <img
-              src={image}
-              alt="Preview"
-              className="previewImage"
-            />
-            {/* <div className={fileInfo}>
-              <p>שם הקובץ: {selectedFile.name}</p>
-              <p>גודל: {(selectedFile.size / 1024 / 1024).toFixed(2)} MB</p>
-            </div> */}
-          </div>
-        ) : (
-          <div>
-            <Upload className="uploadIcon" />
-            <p className="uploadText">Drag & drop an image here or click to select one</p>
-          </div>
-        )}
+      <form onSubmit={handleSubmit}>
+        <div className="mb-3">
+          <label htmlFor="title" className="form-label">כותרת הפוסט</label>
+          <input
+            type="text"
+            id="title"
+            name="title"
+            value={formData.title}
+            onChange={handleInputChange}
+            className="form-control"
+            placeholder="הכנס כותרת"
+            required
+          />
+        </div>
 
-        {loading && (
-          <div className='loadingOverlay'>
-            <div className='loadingText'>מעלה...</div>
-          </div>
-        )}
-      </div>
+        <div className="mb-3">
+          <label htmlFor="description" className="form-label">תיאור הפוסט</label>
+          <textarea
+            id="description"
+            name="description"
+            value={formData.description}
+            onChange={handleInputChange}
+            className="form-control"
+            placeholder="הכנס תיאור"
+            rows={3}
+            required
+          />
+        </div>
 
-        {/* כפתור העלאה */}
-        <button className="btn btn-primary mt-3" onClick={handleUpload}>Upload</button>
+        <div className="mb-3">
+          <label htmlFor="category" className="form-label">קטגוריה</label>
+          <select
+            id="category"
+            name="displayCategory"
+            value={formData.displayCategory}
+            onChange={handleInputChange}
+            className="form-select"
+            required
+          >
+            <option value="">בחר קטגוריה</option>
+            {categories.map((cat) => (
+              <option key={cat} value={cat}>{cat}</option>
+            ))}
+          </select>
+        </div>
+
+        <div
+          className={`dropzone ${isDragging ? 'dropzoneDragging' : ''} ${loading ? 'dropzoneDisabled' : ''}`}
+          onClick={handleClick}
+          onDragEnter={handleDragEnter}
+          onDragLeave={handleDragLeave}
+          onDragOver={handleDragOver}
+          onDrop={handleDrop}
+        >
+          <input
+            type="file"
+            accept="image/*"
+            multiple
+            onChange={handleFileChange}
+            className="hiddenInput"
+            ref={fileInputRef}
+          />
+          {formData.images.length > 0 ? (
+            <div className="previewImages">
+              {formData.images.map((img, idx) => (
+                <img key={idx} src={img} alt={`preview ${idx}`} className="previewImage" />
+              ))}
+            </div>
+          ) : (
+            <div>
+              <Upload className="uploadIcon" />
+              <p className="uploadText">גרור ושחרר תמונות או לחץ לבחירה</p>
+            </div>
+          )}
+        </div>
+
+        <button type="submit" className="btn btn-primary mt-3" disabled={loading}>
+          {loading ? 'מעלה...' : 'צור פוסט'}
+        </button>
+      </form>
 
       {message && (
-        <p className={`message ${
-          message.includes('שגיאה') ? 'errorMessage' : 'successMessage'
-        }`}>
+        <p className={`message ${message.includes('שגיאה') ? 'errorMessage' : 'successMessage'}`}>
           {message}
         </p>
       )}
@@ -159,4 +214,4 @@ const UploadImageComponent = () => {
   );
 };
 
-export default UploadImageComponent;
+export default CreatePostForm;

@@ -1,0 +1,36 @@
+.message-table {
+    min-width: 800px;
+  }
+  
+  @media (max-width: 768px) {
+    .table-responsive {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    
+    .message-content {
+      max-width: 200px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .filter-section {
+      overflow-x: auto;
+      white-space: nowrap;
+      padding-bottom: 1rem;
+    }
+
+    .btn-group {
+      flex-wrap: nowrap;
+    }
+  }
+  
+  .badge {
+    font-size: 0.9em;
+    padding: 0.5em 0.7em;
+  }
+
+  .filter-section .btn {
+    min-width: 80px;
+  }

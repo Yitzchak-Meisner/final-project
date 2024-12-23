@@ -1,129 +1,67 @@
-/* .container {
+.container {
     padding: 1rem;
-  }
+}
   
-  .title {
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin-bottom: 1rem;
-    text-align: center;
-  }
-  
-  .dropzone {
-    position: relative;
-    border: 2px dashed #007bff;
-    border-radius: 0.5rem;
-    padding: 2rem;
-    text-align: center;
-    cursor: pointer;
-    transition: border-color 0.3s ease, background-color 0.3s ease;
-  }
-  
-  .dropzone:hover {
-    border-color: #0056b3;
-  }
-  
-  .dropzoneDragging {
-    border-color: #28a745;
-    background-color: #e6ffe6;
-  }
-  
-  .hiddenInput {
-    display: none;
-  }
-  
-  .previewImage {
-    max-width: 100%;
-    max-height: 300px;
-    margin: 0 auto;
-    border-radius: 0.5rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  }
-  
-  .uploadIcon {
-    width: 3rem;
-    height: 3rem;
-    color: #007bff;
-    margin-bottom: 0.5rem;
-  }
-  
-  .uploadText {
-    font-size: 1rem;
-    color: #6c757d;
-  }
-  
-  .btn {
-    display: block;
-    margin: 0 auto;
-  }
-   */
-
-
-
-   .container {
-    padding: 1rem;
-  }
-  
-  .title {
+.title {
     font-size: 1.25rem;
     font-weight: bold;
     margin-bottom: 1rem;
-  }
+}
   
-  .dropzone {
+.dropzone {
     position: relative;
     border: 2px dashed #e5e7eb;
     border-radius: 0.5rem;
     padding: 2rem;
     text-align: center;
     cursor: pointer;
-  }
+}
   
-  .dropzone:hover {
+.dropzone:hover {
     border-color: #9ca3af;
-  }
+}
   
-  .dropzoneDragging {
+.dropzoneDragging {
     border-color: #3b82f6;
     background-color: #eff6ff;
-  }
+}
   
-  .dropzoneDisabled {
+.dropzoneDisabled {
     pointer-events: none;
     opacity: 0.5;
-  }
+}
   
-  .hiddenInput {
+.hiddenInput {
     display: none;
-  }
+}
   
-  .previewImage {
+.previewImage {
     max-width: 24rem;
     margin: 0 auto;
     border-radius: 0.5rem;
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-  }
+}
   
-  .fileInfo {
+.fileInfo {
     margin-top: 0.5rem;
     font-size: 0.875rem;
     color: #4b5563;
-  }
+}
   
-  .uploadIcon {
+.uploadIcon {
     width: 3rem;
     height: 3rem;
     margin: 0 auto;
     color: #9ca3af;
-  }
+}
   
-  .uploadText {
+.uploadText {
     margin-top: 0.5rem;
     font-size: 0.875rem;
     color: #4b5563;
-  }
+}
   
-  .loadingOverlay {
+.loadingOverlay {
     position: absolute;
     inset: 0;
     display: flex;
@@ -131,21 +69,21 @@
     justify-content: center;
     background-color: rgba(255, 255, 255, 0.75);
     border-radius: 0.5rem;
-  }
+}
   
-  .loadingText {
+.loadingText {
     color: #3b82f6;
-  }
+}
   
-  .message {
+.message {
     margin-top: 1rem;
     font-size: 0.875rem;
-  }
+}
   
-  .errorMessage {
+.errorMessage {
     color: #ef4444;
-  }
+}
   
-  .successMessage {
+.successMessage {
     color: #22c55e;
-  }
+}

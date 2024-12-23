@@ -10,7 +10,7 @@ dotenv.config();
 const router = express.Router();
 
 // סוד לטוקן JWT
-const JWT_SECRET = process.env.JWT_SECRET;
+const JWT_SECRET : string = process.env.JWT_SECRET!;
 
 router.get('/', async (req, res) => {
     console.log('hello');
