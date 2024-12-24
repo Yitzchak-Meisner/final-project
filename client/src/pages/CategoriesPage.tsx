@@ -7,6 +7,7 @@ import type { Params } from "react-router-dom";
 import { useEffect, useState } from "react";
 import PostPopup from "../components/PostPopup";
 import axios from "axios";
+import PlusButton from "../components/PlusButton";
 
 
 export default function Categories() {
@@ -112,6 +113,7 @@ export default function Categories() {
           onClose={() => setSelectedPost(null)} // סגירת הפופאפ
         />
       )}
+    <PlusButton currentCategory={category} />
     </div>
   );
 }
