@@ -67,24 +67,26 @@ router.post('/create-posts', async(req: Request<{}, {}, CreatePostRequest>, res:
 });
 
 
-router.get('/posts', async (req, res) => {
+router.get('/', async (req, res) => {
+  const category = req.query.category;
     try {
       const query = `
         SELECT p.id, p.title, p.description, p.category, p.created_at, 
                json_agg(i.url) AS images
         FROM posts p
         LEFT JOIN images i ON p.id = i.post_id
+        WHERE p.category = $1
         GROUP BY p.id
         ORDER BY p.created_at DESC;
       `;
-      const result = await pool.query(query);
-      res.json(result.rows);
+      const result = await pool.query(query, [category]);
+      res.status(200).json(result.rows);
     } catch (error) {
       console.error('Error fetching posts:', error);
       res.status(500).json({ error: 'שגיאה בשליפת הפוסטים' });
     }
 });
-  
+
 
 
 export default router;

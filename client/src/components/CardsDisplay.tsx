@@ -1,5 +1,6 @@
 import { Container, Row, Col } from 'react-bootstrap';
 import { Trash2 } from 'lucide-react';
+import { translateKeyValue } from '../data';
 
 const CardsDisplay = ({ images, deleteImg }) => {
 
@@ -14,16 +15,16 @@ const CardsDisplay = ({ images, deleteImg }) => {
               <div className="card-body">
                 <img 
                   src={img.url} 
-                  alt={img.category} 
+                  alt={translateKeyValue(img.category) || img.category}
                   className="img-fluid rounded" 
                   style={{
                     width: '100%',
                     height: '300px',
                     objectFit: 'cover'
                   }}
-                />
-                <h5 className="card-title mt-3">{img.category}</h5>
-                {admin ? <Trash2 onClick = {() => deleteImg(img.id)}/> : null}
+                  />
+                  {admin ? <Trash2 onClick = {() => deleteImg(img.id)}/> : null}
+                {/* <h5 className="card-title mt-3">{translateKeyValue(img.category)}</h5> */}
               </div>
             </div>
           </Col>
