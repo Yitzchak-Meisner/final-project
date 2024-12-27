@@ -1,31 +1,79 @@
-import { Plus } from 'lucide-react';
+// PlusButton.tsx
+import { Plus, Image, FileText } from 'lucide-react';
 import { useState } from 'react';
 import Popup from './Popup';
+import SingleImageUpload from './SingleImageUpload';
+import PostUpload from './PostUpload';
 import stylesButtons from '../styles/StylesButtons.module.css';
-import { ReactNode } from 'react';
 
 interface PlusButtonProps {
-  popupTitle: string;
-  popupContent: ReactNode; 
+  currentCategory?: string;
 }
 
-const PlusButton = ({ popupTitle, popupContent }: PlusButtonProps) => {
+const PlusButton = ({ currentCategory }: PlusButtonProps) => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [uploadType, setUploadType] = useState<'image' | 'post' | null>(null);
 
-  const togglePopup = () => {
-    setIsPopupOpen(!isPopupOpen);
+  const handleButtonClick = (type: 'image' | 'post') => {
+    setUploadType(type);
+    setIsPopupOpen(true);
+    setIsMenuOpen(false);
   };
 
-  return (
+  const getPopupContent = () => {
+    switch (uploadType) {
+      case 'image':
+        return <SingleImageUpload defaultCategory={currentCategory} />;
+      case 'post':
+        return <PostUpload defaultCategory={currentCategory} />;
+      default:
+        return null;
+    }
+  };
+
+  const adminStatus = localStorage.getItem('isAdmin');
+  
+  
+  {adminStatus ? (
     <>
-      <div className={stylesButtons.addNewButton} onClick={togglePopup}>
-        <Plus size={24} />
+      <div className={stylesButtons.plusButtonContainer}>
+        <div 
+          className={stylesButtons.addNewButton}
+          onMouseEnter={() => setIsMenuOpen(true)}
+          onMouseLeave={() => setIsMenuOpen(false)}
+        >
+          <Plus size={24} />
+          {isMenuOpen && (
+            <div className={stylesButtons.floatingMenu}>
+              <button 
+                className={stylesButtons.menuItem}
+                onClick={() => handleButtonClick('post')}
+              >
+                <FileText size={18} />
+                <span>הוסף פוסט</span>
+              </button>
+              <button 
+                className={stylesButtons.menuItem}
+                onClick={() => handleButtonClick('image')}
+              >
+                <Image size={18} />
+                <span>הוסף תמונה</span>
+              </button>
+            </div>
+          )}
+        </div>
       </div>
+
       {isPopupOpen && (
-        <Popup togglePopup={togglePopup} title={popupTitle} content={popupContent} />
+        <Popup 
+          togglePopup={() => setIsPopupOpen(false)}
+          title={uploadType === 'post' ? 'הוספת פוסט חדש' : 'העלאת תמונה חדשה'}
+          content={getPopupContent()}
+        />
       )}
     </>
-  );
+  ) : null};
 };
 
 export default PlusButton;

@@ -61,7 +61,7 @@ const ContactUs = () => {
             <div className='form-container'>
               <div className='form-header'>
                 <h2>{formMode === 'contact' ? 'צור קשר' : 'המליצו עלינו'}</h2>
-                <label className="switch">
+                {/* <label className="switch">
                   <input 
                     type="checkbox" 
                     checked={formMode === 'recommend'} 
@@ -71,7 +71,7 @@ const ContactUs = () => {
                     <span className="slider-text">צור קשר</span>
                     <span className="slider-text">המליצו עלינו</span>
                   </span>
-                </label>
+                </label> */}
               </div>
               
               {submissionStatus === 'success' && (

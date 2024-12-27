@@ -1,27 +1,17 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useLoaderData } from 'react-router-dom';
-import { fetchMessages, addMessage, updateMessageStatus, deleteMessage } from '../api/api-managingMessages';
-import { Table, Button, Form } from 'react-bootstrap';
+import { fetchMessages, updateMessageStatus, deleteMessage } from '../api/api-managingMessages';
+import { Table, Button, Dropdown, ButtonGroup } from 'react-bootstrap';
+import '../styles/MessagesDashboard.css';
 
 
 const MessagesDashboard: React.FC = () => {
 
     const loadedMessages = useLoaderData() as { success: boolean; data: any[] };
     const [messages, setMessages] = useState(loadedMessages.data || []);
+    const [statusFilter, setStatusFilter] = useState<string | null> (null);
 
-
-    //   const [newMessage, setNewMessage] = useState({ name: '', email: '', message: '' });
-
-    // הוספת הודעה חדשה
-    //   const handleAddMessage = async () => {
-//     try {
-    //       const addedMessage = await addMessage(newMessage);
-    //       setMessages([...messages, addedMessage]);
-//       setNewMessage({ name: '', email: '', message: '' });
-//     } catch (error) {
-//       console.error('Error adding message:', error);
-//     }
-//   };
+    const statusOptions = ['נענתה', 'נקראה', 'חדש'];
 
 // עדכון סטטוס הודעה
 const handleUpdateStatus = async (id: number, status: string) => {
@@ -43,83 +33,113 @@ const handleDeleteMessage = async (id: number) => {
     }
   };
 
-  return (
+  // Status badge color
+  const getStatusVariant = (status: string) => {
+    switch (status) {
+      case 'חדש':
+        return 'primary';
+      case 'נקראה':
+        return 'info';
+      case 'נענתה':
+        return 'success';
+      default:
+        return 'secondary';
+    }
+  };
+
+  // Filter messages by status
+  const filteredMessages = statusFilter
+    ? messages.filter((msg) => msg.status === statusFilter)
+    : messages;
+
+    return (
       <div className="container mt-4">
-      <h2>ניהול הודעות</h2>
-
-      {/* טבלה להצגת הודעות */}
-      <Table striped bordered hover>
-        <thead>
-          <tr>
-            <th>שם</th>
-            <th>דוא"ל</th>
-            <th>תוכן</th>
-            <th>סטטוס</th>
-            <th>פעולות</th>
-          </tr>
-        </thead>
-        <tbody>
-          {messages.map((msg) => (
-              <tr key={msg.id}>
-              <td>{msg.name}</td>
-              <td>{msg.email}</td>
-              <td>{msg.message}</td>
-              <td>{msg.status}</td>
-              <td>
+        <div className="d-flex justify-content-between align-items-center mb-4">
+          <h2>ניהול הודעות</h2>
+          
+          <div className="filter-section">
+            <ButtonGroup>
+              <Button
+                variant={statusFilter === null ? 'dark' : 'outline-dark'}
+                onClick={() => setStatusFilter(null)}
+              >
+                הכל ({messages.length})
+              </Button>
+              {statusOptions.map((status) => (
                 <Button
-                  variant="success"
-                  size="sm"
-                  onClick={() => handleUpdateStatus(msg.id, 'נענתה')}
+                  key={status}
+                  variant={statusFilter === status ? getStatusVariant(status) : `outline-${getStatusVariant(status)}`}
+                  onClick={() => setStatusFilter(status)}
                 >
-                  סמן כ"נענתה"
-                </Button>{' '}
-                <Button variant="danger" size="sm" onClick={() => handleDeleteMessage(msg.id)}>
-                  מחק
+                  {status} ({messages.filter(msg => msg.status === status).length})
                 </Button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </Table>
-
-      {/* טופס להוספת הודעה */}
-      {/* <h3>הוספת הודעה חדשה</h3>
-      <Form>
-      <Form.Group className="mb-3">
-      <Form.Label>שם</Form.Label>
-          <Form.Control
-          type="text"
-            value={newMessage.name}
-            onChange={(e) => setNewMessage({ ...newMessage, name: e.target.value })}
-            />
-            </Form.Group>
-            <Form.Group className="mb-3">
-          <Form.Label>דוא"ל</Form.Label>
-          <Form.Control
-          type="email"
-          value={newMessage.email}
-            onChange={(e) => setNewMessage({ ...newMessage, email: e.target.value })}
-          />
-        </Form.Group>
-        <Form.Group className="mb-3">
-          <Form.Label>תוכן</Form.Label>
-          <Form.Control
-          as="textarea"
-          rows={3}
-          value={newMessage.message}
-          onChange={(e) => setNewMessage({ ...newMessage, message: e.target.value })}
-          />
-          </Form.Group>
-          <Button variant="primary" onClick={handleAddMessage}>
-          שלח הודעה
-          </Button>
-          </Form> */}
-    </div>
-  );
-};
-
-export default MessagesDashboard;
-
+              ))}
+            </ButtonGroup>
+          </div>
+        </div>
+  
+        <div className="table-responsive">
+          <Table striped bordered hover className="message-table">
+            <thead>
+              <tr>
+                <th>שם</th>
+                <th>דוא"ל</th>
+                <th className="message-content">תוכן</th>
+                <th>סטטוס</th>
+                <th>פעולות</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredMessages.map((msg) => (
+                <tr key={msg.id}>
+                  <td className="align-middle">{msg.name}</td>
+                  <td className="align-middle">{msg.email}</td>
+                  <td className="message-content align-middle">{msg.message}</td>
+                  <td className="align-middle">
+                    <span className={`badge bg-${getStatusVariant(msg.status)}`}>
+                      {msg.status}
+                    </span>
+                  </td>
+                  <td className="align-middle">
+                    <div className="d-flex gap-2 flex-wrap">
+                      <Dropdown>
+                        <Dropdown.Toggle 
+                          variant={getStatusVariant(msg.status)} 
+                          size="sm"
+                        >
+                          שנה סטטוס
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu>
+                          {statusOptions.map((status) => (
+                            <Dropdown.Item
+                              key={status}
+                              onClick={() => handleUpdateStatus(msg.id, status)}
+                              active={msg.status === status}
+                            >
+                              {status}
+                            </Dropdown.Item>
+                          ))}
+                        </Dropdown.Menu>
+                      </Dropdown>
+                      <Button 
+                        variant="danger" 
+                        size="sm" 
+                        onClick={() => handleDeleteMessage(msg.id)}
+                      >
+                        מחק
+                      </Button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        </div>
+      </div>
+    );
+  };
+  
+  export default MessagesDashboard;
 // טוען נתונים באמצעות ה-loader
 export async function loader() {
   return await fetchMessages();

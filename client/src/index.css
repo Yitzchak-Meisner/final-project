@@ -6,4 +6,15 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  --primary-color: #f6f8fd;
+  --secondary-color: #376b78;
+  --color-text: #231942;
+  --navbar-color: #ffffff;
+  --navbar-color-text: #376b78;
+  --background: #376b78a4, #f9c883a7, #2a536368, #9e764495, #5f7f7bd8;
+  --deep-teal: #366D73; /* ירוק כהה עם נטייה לטורקיז */
+  --warm-sand: #D9AA71; /* גוון חול חמים */
+  --soft-brown: #A68A68; /* חום רך */
+  --peachy-orange: #F2B680; /* גוון אפרסקי/כתום עדין */
+  --blush-rose: #BF877A; /* ורוד-חום רך */
 }
