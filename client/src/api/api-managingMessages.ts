@@ -4,8 +4,15 @@ const API_URL = 'http://localhost:3000/api/messages';
 
 // קבלת כל ההודעות
 export const fetchMessages = async () => {
+
+  const token = localStorage.getItem('token');
+
   try {
-    const response = await axios.get(API_URL);
+    const response = await axios.get(API_URL, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
     console.log(response.data);
     return response.data;
     
@@ -29,7 +36,11 @@ export const addMessage = async (message: { name: string; email: string; message
 // עדכון סטטוס הודעה
 export const updateMessageStatus = async (id: number, status: string) => {
   try {
-    const response = await axios.put(`${API_URL}/${id}`, { status });
+    const response = await axios.put(`${API_URL}/${id}`, { status }, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+    });
     return response.data;
   } catch (error) {
     console.error('Error updating message status:', error);
@@ -40,7 +51,11 @@ export const updateMessageStatus = async (id: number, status: string) => {
 // מחיקת הודעה
 export const deleteMessage = async (id: number) => {
   try {
-    await axios.delete(`${API_URL}/${id}`);
+    await axios.delete(`${API_URL}/${id}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+    });
   } catch (error) {
     console.error('Error deleting message:', error);
     throw error;

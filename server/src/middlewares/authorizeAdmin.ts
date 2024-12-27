@@ -1,7 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your_secret_key';
+dotenv.config();
 
 // ממשק עבור המבנה של הטוקן
 interface DecodedToken {
@@ -24,10 +25,10 @@ export const authorizeAdmin = (req: Request, res: Response, next: NextFunction):
 
   try {
     // אימות הטוקן
-    const decoded = jwt.verify(token, JWT_SECRET) as DecodedToken;
-
+    const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as DecodedToken;
+    
     // בדיקת תפקיד המשתמש
-    if (decoded.role !== 'admin') {
+    if (decoded.role !== 'manager') {
       res.status(403).json({ message: 'Access forbidden: Admins only' });
       return;
     }

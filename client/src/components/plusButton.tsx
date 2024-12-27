@@ -32,7 +32,10 @@ const PlusButton = ({ currentCategory }: PlusButtonProps) => {
     }
   };
 
-  return (
+  const adminStatus = localStorage.getItem('isAdmin');
+  
+  
+  {adminStatus ? (
     <>
       <div className={stylesButtons.plusButtonContainer}>
         <div 
@@ -70,7 +73,7 @@ const PlusButton = ({ currentCategory }: PlusButtonProps) => {
         />
       )}
     </>
-  );
+  ) : null};
 };
 
 export default PlusButton;

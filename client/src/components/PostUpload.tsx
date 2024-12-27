@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { Form, Button, Alert } from 'react-bootstrap';
-import { Upload } from 'react-bootstrap-icons';
 import axios from 'axios';
 import '../styles/ImageUpload.css';
 import { links } from '../data';
+import ImageUploader from '../components/try3';
+// import { handleImageUpload } from '../utils/imageUtils';
 
 // interface PostUploadProps {
 //   category: string;
@@ -18,20 +19,6 @@ const PostUpload: React.FC<{ defaultCategory?: string }> = ({ defaultCategory })
     });
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
-  const [isDragging, setIsDragging] = useState(false);
-
-  const handleImageUpload = (files: FileList) => {
-    Array.from(files).forEach(file => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onloadend = () => {
-        setFormData(prev => ({
-          ...prev,
-          images: [...prev.images, reader.result as string]
-        }));
-      };
-    });
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,10 +28,18 @@ const PostUpload: React.FC<{ defaultCategory?: string }> = ({ defaultCategory })
     }
 
     setLoading(true);
+
+    const token = localStorage.getItem('token');
+
     try {
       await axios.post('http://localhost:3000/api/posts/create-posts', {
         ...formData,
         displayCategory: undefined
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
       });
       setMessage('הפוסט נוצר בהצלחה!');
       setFormData({ title: '', description: '', category: '', images: [] });
@@ -91,37 +86,11 @@ const PostUpload: React.FC<{ defaultCategory?: string }> = ({ defaultCategory })
           ))}
         </Form.Select>
       </Form.Group>
-
-      <div
-        className={`dropzone ${isDragging ? 'dragover' : ''}`}
-        onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
-        onDragLeave={() => setIsDragging(false)}
-        onDrop={(e) => {
-          e.preventDefault();
-          setIsDragging(false);
-          handleImageUpload(e.dataTransfer.files);
-        }}
-      >
-        {formData.images.length > 0 ? (
-          <div className="images-preview">
-            {formData.images.map((img, idx) => (
-              <img key={idx} src={img} alt={`Preview ${idx + 1}`} className="preview-image" />
-            ))}
-          </div>
-        ) : (
-          <>
-            <Upload className="upload-icon" />
-            <p>גרור תמונות לכאן או לחץ לבחירת תמונות</p>
-            <input
-              type="file"
-              multiple
-              accept="image/*"
-              onChange={(e) => e.target.files && handleImageUpload(e.target.files)}
-            />
-          </>
-        )}
-      </div>
-
+      <ImageUploader 
+        onImageUpload={(files) => console.log('תמונות הועלו:', files)} 
+        multiple={true}
+        maxImages={20}
+      />
       <Button type="submit" className="mt-3" disabled={loading}>
         {loading ? 'יוצר פוסט...' : 'צור פוסט'}
       </Button>

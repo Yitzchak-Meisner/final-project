@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express';
 import pool from '../db/db';
 import { PoolClient } from 'pg';
+import { authorizeAdmin } from '../middlewares/authorizeAdmin';
 
 const router = express.Router();
 
@@ -14,7 +15,7 @@ interface CreatePostRequest {
 }
 
 // מסלול ליצירת פוסט
-router.post('/create-posts', async(req: Request<{}, {}, CreatePostRequest>, res: Response) => {
+router.post('/create-posts', authorizeAdmin, async(req: Request<{}, {}, CreatePostRequest>, res: Response) => {
   const { title, description, category, images } = req.body as CreatePostRequest;
 
   // ולידציה של הנתונים

@@ -1,11 +1,12 @@
 import express from 'express';
 import pool from '../db/db';
 import { handleError } from '../errors/errors';
+import { authorizeAdmin } from '../middlewares/authorizeAdmin';
 
 const router = express.Router();
 
 // קבלת כל ההודעות
-router.get('/', async (req, res) => {
+router.get('/', authorizeAdmin, async (req, res) => {
     try {
         const result = await pool.query('SELECT * FROM messages ORDER BY sended_at DESC');
         res.json({
@@ -39,7 +40,7 @@ router.post('/', async (req, res) => {
 });
 
 // עדכון סטטוס הודעה
-router.put('/:id', async (req, res) => {
+router.put('/:id', authorizeAdmin, async (req, res) => {
     const { id } = req.params;
     const { status } = req.body;
     try {
@@ -57,7 +58,7 @@ router.put('/:id', async (req, res) => {
 });
 
 // מחיקת הודעה
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', authorizeAdmin, async (req, res) => {
     const { id } = req.params;
     try {
         const result = await pool.query('DELETE FROM messages WHERE id = $1', [id]);
