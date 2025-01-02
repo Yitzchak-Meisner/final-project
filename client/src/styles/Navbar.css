@@ -1,7 +1,102 @@
-.navbar-brand img {
+.navbar-custom {
+    background-color: transparent;
+    transition: all 0.3s ease;
+    padding: 1rem 0;
+}
+
+.navbar-custom.color-active {
+    background-color: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 0.5rem 0;
+}
+
+.navbar-logo {
     height: 50px;
     width: auto;
+    transition: all 0.3s ease;
 }
+
+.color-active .navbar-logo {
+    height: 40px;
+}
+
+.nav-link.custom-link {
+    color: white !important;
+    font-weight: 500;
+    position: relative;
+    padding: 0.5rem 1rem !important;
+    margin: 0 0.25rem;
+    transition: all 0.3s ease;
+}
+
+.color-active .nav-link.custom-link {
+    color: #333 !important;
+}
+
+.nav-link.custom-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 2px;
+    background-color: white;
+    transition: all 0.3s ease;
+}
+
+.color-active .nav-link.custom-link::after {
+    background-color: #3b82f6;
+}
+
+.nav-link.custom-link:hover::after {
+    width: 100%;
+}
+
+/* ---------------------- */
+
+/* .navbar-toggler-icon {
+    filter: invert(1);
+}
+
+.navbar-toggler-icon::after {
+    background-image: none !important;
+} */
+
+
+/* --------------------- */
+
+
+
+.login-button {
+    color: white !important;
+    border-color: white !important;
+    padding: 0.5rem 1.5rem !important;
+    transition: all 0.3s ease !important;
+    display: flex !important;
+    align-items: center !important;
+}
+
+.color-active .login-button {
+    color: #3b82f6 !important;
+    border-color: #3b82f6 !important;
+}
+
+.login-button:hover {
+    background-color: white !important;
+    color: #3b82f6 !important;
+}
+
+.color-active .login-button:hover {
+    background-color: #3b82f6 !important;
+    color: white !important;
+}
+
+/* .navbar-brand img {
+    height: 50px;
+    width: auto;
+    transition: all 0.3s ease;
+} */
 
 .login-button {
     margin-right: 1vw;
@@ -16,4 +111,46 @@
         border: none;
         padding: 4px;
     }
+
+    .navbar-toggler {
+        border-color: white !important;
+    }
+
+    .color-active .navbar-toggler {
+        border-color: #333 !important;
+    }
+
+    .navbar-collapse {
+        background-color: rgba(255, 255, 255, 0.95);
+        padding: 1rem;
+        border-radius: 8px;
+        margin-top: 0.5rem;
+    }
+
+    .color-active .navbar-collapse {
+        background-color: white;
+    }
+
+    .nav-link.custom-link {
+        color: #333 !important;
+        font-weight: 500;
+        position: relative;
+        padding: 0.5rem 1rem !important;
+        margin: 0 0.25rem;
+        transition: all 0.3s ease;
+    }
+
+    .nav-link.custom-link::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 0;
+        height: 2px;
+        background-color: #333;
+        transition: all 0.3s ease;
+    }
+    
+
 }

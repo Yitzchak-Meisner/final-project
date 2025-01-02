@@ -8,6 +8,7 @@ const router = express.Router();
 router.post('/upload', authorizeAdmin, async (req, res) => {
     // const id = uuidv4();
     const { image, category } = req.body;
+    console.log(req.body);
 
     try {
       // שמירת המידע ב-DB

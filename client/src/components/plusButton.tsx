@@ -1,4 +1,3 @@
-// PlusButton.tsx
 import { Plus, Image, FileText } from 'lucide-react';
 import { useState } from 'react';
 import Popup from './Popup';
@@ -34,8 +33,8 @@ const PlusButton = ({ currentCategory }: PlusButtonProps) => {
 
   const adminStatus = localStorage.getItem('isAdmin');
   
-  
-  {adminStatus ? (
+  return (
+    adminStatus &&
     <>
       <div className={stylesButtons.plusButtonContainer}>
         <div 
@@ -73,7 +72,7 @@ const PlusButton = ({ currentCategory }: PlusButtonProps) => {
         />
       )}
     </>
-  ) : null};
+  );
 };
 
 export default PlusButton;

@@ -62,9 +62,10 @@ const NavbarComponent = () => {
   }, []);
 
   return (
-    <div>
+    <div style={{ position: 'absolute', width: '100%', zIndex: 1000 }}>
       <Navbar // הקונטיינר הראשי לניווט
         expand='xl'
+        fixed='top'
         className={`navbar-custom ${changeColor ? 'color-active' : ''}`}
       >
         <Container fluid className="flex-row-reverse">
@@ -81,7 +82,7 @@ const NavbarComponent = () => {
           )}
             <Navbar.Toggle aria-controls='basic-navbar-nav'/>{/*  כפתור לפתיחה/סגירה של התפריט במסכים קטנים */}
           <Navbar.Brand href='/' className='order-xl-1'> {/* מציג את לוגו/שם המותג */}
-            <img src='/logo.png' alt='ציפי שטיין - עיצובי ברים' />
+            <img src='/logo2.png' alt='ציפי שטיין - עיצובי ברים' className='navbar-logo' />
           </Navbar.Brand>
           <Navbar.Collapse id='basic-navbar-nav'> {/* אזור שנפתח/נסגר על ידי ה-Toggle, מחזיק את הניווט */}
             <Nav className='mx-auto'> {/* מכולה לפריטי נווט (Nav Items) */}

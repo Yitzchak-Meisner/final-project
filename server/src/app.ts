@@ -7,7 +7,7 @@ import postsRouter from './routes/api-posts';
 
 const app = express();
 
-app.use(cors());
+app.use(cors({  origin: 'http://localhost:5173 '}));
 // הגדלת מגבלת גודל JSON ל-10MB
 app.use(express.json({ limit: '20mb' }));
 app.use(express.urlencoded({ limit: '20mb', extended: true }));
