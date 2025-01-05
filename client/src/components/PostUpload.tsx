@@ -4,11 +4,6 @@ import axios from 'axios';
 import '../styles/ImageUpload.css';
 import { links } from '../data';
 import ImageUploader from './ImageUploader';
-// import { handleImageUpload } from '../utils/imageUtils';
-
-// interface PostUploadProps {
-//   category: string;
-// }
 
 const PostUpload: React.FC<{ defaultCategory?: string }> = ({ defaultCategory }) => {
     const [formData, setFormData] = useState({

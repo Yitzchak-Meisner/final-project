@@ -53,13 +53,15 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImageUpload, multiple =
           const updatedImages = multiple
             ? [...prevImages, e.target?.result as string]
             : [e.target?.result as string];
-  
+
+          onImageUpload(updatedImages);
+
           return updatedImages;
         });
       };
   
-      onImageUpload(multiple ? images : images[0]);
       // קריאה חזרה ל-props שהועברו עם התמונות שהועלו
+      // onImageUpload(multiple ? images : images[0]);
       
       reader.readAsDataURL(file); // קריאת תוכן הקובץ
     });
