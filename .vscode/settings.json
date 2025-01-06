@@ -18,17 +18,5 @@
         "רספונסיבי",
         "רספונסיביות",
         "שטיין"
-    ],
-    "sqltools.connections": [
-        {
-            "previewLimit": 50,
-            "server": "localhost",
-            "port": 5432,
-            "driver": "PostgreSQL",
-            "name": "final-project",
-            "database": "postgres",
-            "username": "yitzchak",
-            "password": "123456"
-        }
     ]
 }

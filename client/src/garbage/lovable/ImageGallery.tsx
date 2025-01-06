@@ -44,6 +44,7 @@ const ImageGallery: React.FC = ( { images , deleteImg } ) => {
   // מחזיר את התצוגה של הרכיב.
   return (
     <Container className="py-5"> {/* עוטף את התוכן הראשי עם ריווח אנכי */}
+    {images ? (
       <Row className="g-4"> {/* מסדר את התמונות ברשת (grid) עם מרווחים */}
         {images.map((image) => ( /* עובר על כל תמונה במערך ומציג אותה כעמודה ברשת */
           <Col key={image.id} xs={12} md={6} lg={4}> {/* מגדיר גודל לעמודות ביחס למסכים שונים */}
@@ -79,6 +80,9 @@ const ImageGallery: React.FC = ( { images , deleteImg } ) => {
         ))}
       </Row>
       
+    ) : (
+      <p>לא קיים תמונות</p>
+    )}
       {/* מציג את ה-Popup של התמונה אם נבחרה תמונה */}
       {selectedImage && ( 
         <ImagePopup

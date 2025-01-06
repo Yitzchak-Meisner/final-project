@@ -53,7 +53,7 @@ export default function Categories() {
   return (
     <Container style={{ paddingTop: '100px' }}>
       <div className="d-flex justify-content-between align-items-center mb-4">
-        <h1>{translateKeyValue(category)}</h1>
+        <h1>{translateKeyValue(category as string)}</h1>
       </div>
       
       <GalleryTabs
@@ -83,5 +83,10 @@ export async function loader({ params }: { params: Params<string>}) {
   }
 
 
-  return fetchImagesByCategory(category);
+  try {
+    return await fetchImagesByCategory(category);
+  } catch (error) {
+    console.error('Error in loader:', error);
+    return []; // מחזיר מערך ריק במקום לזרוק שגיאה
+  }
 }

@@ -1,0 +1,100 @@
+.container {
+    padding: 2rem 0;
+  }
+  
+  .title {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  
+  .error {
+    text-align: center;
+    color: #dc3545;
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+    background-color: #f8d7da;
+    border-radius: 4px;
+  }
+  
+  .horizontalScroll {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding: 0 1.25rem;
+    margin-bottom: 1rem;
+  }
+  
+  .horizontalScroll::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .scrollWrapper {
+    display: flex;
+    gap: 1.5rem;
+    width: fit-content;
+    min-width: 100%;
+    padding: 0.5rem 0;
+  }
+  
+  .postCard {
+    flex: 0 0 auto;
+    width: calc((100vw - 7.5rem) / 3);
+    min-width: 300px;
+    max-width: 500px;
+    transition: transform 0.2s ease;
+  }
+  
+  .postContent {
+    height: 100%;
+    width: 100%;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  
+  .loaderContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 1rem;
+  }
+  
+  .loader {
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+  
+  /* Responsive Breakpoints */
+  @media (max-width: 1200px) {
+    .postCard {
+      width: calc((100vw - 6rem) / 2);
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .horizontalScroll {
+      padding: 0 1rem;
+    }
+  
+    .postCard {
+      width: calc(100vw - 4rem);
+    }
+  
+    .scrollWrapper {
+      gap: 1rem;
+    }
+  }
+  
+  /* RTL Support */
+  [dir="rtl"] .horizontalScroll {
+    direction: rtl;
+  }
+  
+  [dir="rtl"] .scrollWrapper {
+    direction: rtl;
+  }

@@ -1,4 +1,0 @@
--- SELECT * FROM images;
--- SELECT * FROM users;
--- SELECT * FROM posts;
--- SELECT * FROM messages;

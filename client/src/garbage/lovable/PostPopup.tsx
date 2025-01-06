@@ -1,12 +1,11 @@
+import { Modal } from 'react-bootstrap';
+import { X, ChevronRight, ChevronLeft } from 'lucide-react';
 import { useState } from 'react';
-import { Modal, Container, Row, Col, Button } from 'react-bootstrap';
-import { ChevronLeft, ChevronRight, X } from 'lucide-react';
-import "./PostPopup.css";
 
 interface Post {
   id: string;
   title: string;
-  content: string;
+  description: string;
   images: string[];
 }
 
@@ -19,78 +18,183 @@ interface PostPopupProps {
 const PostPopup: React.FC<PostPopupProps> = ({ post, show, onClose }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-  const nextImage = () => {
-    setCurrentImageIndex((prev) => 
-      prev === post.images.length - 1 ? 0 : prev + 1
-    );
+  const nextImage = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (currentImageIndex < post.images.length - 1) {
+      setCurrentImageIndex(prev => prev + 1);
+    } else {
+      setCurrentImageIndex(0); // חזרה לתמונה הראשונה
+    }
   };
 
-  const previousImage = () => {
-    setCurrentImageIndex((prev) => 
-      prev === 0 ? post.images.length - 1 : prev - 1
-    );
+  const prevImage = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (currentImageIndex > 0) {
+      setCurrentImageIndex(prev => prev - 1);
+    } else {
+      setCurrentImageIndex(post.images.length - 1); // מעבר לתמונה האחרונה
+    }
   };
 
   return (
     <Modal 
       show={show} 
       onHide={onClose}
-      size="xl"
-      centered
-      className="post-popup-modal"
+      fullscreen
+      style={{ backgroundColor: 'rgba(0, 0, 0, 0.75)' }}
     >
-      <Container fluid className="p-0">
-        <Row className="h-100">
-          {/* Image Section */}
-          <Col md={8} className="position-relative p-0">
-            <div style={{ height: '80vh' }}>
+      <Modal.Header className="border-0 p-0">
+        <button
+          onClick={onClose}
+          style={{
+            position: 'absolute',
+            right: '20px',
+            top: '20px',
+            zIndex: 1050,
+            background: 'none',
+            border: 'none',
+            color: '#000',
+            cursor: 'pointer',
+            padding: '8px'
+          }}
+        >
+          <X size={24} />
+        </button>
+      </Modal.Header>
+      
+      <Modal.Body className="p-0 d-flex justify-content-center align-items-center">
+        <div 
+          className="d-flex" 
+          style={{
+            width: '95%',
+            height: '90vh',
+            backgroundColor: '#fff',
+            borderRadius: '8px',
+            overflow: 'hidden'
+          }}
+        >
+          {/* אזור התמונה - עם חיצי ניווט */}
+          <div 
+            className="col-8" 
+            style={{ 
+              backgroundColor: '#f8f9fa',
+              height: '100%',
+              position: 'relative',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
+          >
+            {/* החץ השמאלי */}
+            {post.images.length > 1 && (
+              <button
+                onClick={prevImage}
+                style={{
+                  position: 'absolute',
+                  left: '20px',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  background: 'rgba(255, 255, 255, 0.8)',
+                  border: 'none',
+                  borderRadius: '50%',
+                  width: '40px',
+                  height: '40px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer',
+                  zIndex: 1,
+                  boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                }}
+              >
+                <ChevronLeft size={24} />
+              </button>
+            )}
+
+            {/* התמונה */}
+            {post.images[currentImageIndex] && (
               <img
                 src={post.images[currentImageIndex]}
-                alt=""
-                className="w-100 h-100 object-fit-cover"
+                alt={post.title}
+                style={{
+                  maxWidth: '100%',
+                  maxHeight: '100%',
+                  objectFit: 'contain'
+                }}
               />
-              {post.images.length > 1 && (
-                <>
-                  <Button
-                    variant="light"
-                    onClick={previousImage}
-                    className="position-absolute start-3 top-50 translate-middle-y rounded-circle bg-white bg-opacity-80"
-                    style={{ padding: '0.5rem' }}
-                  >
-                    <ChevronLeft size={20} className="text-secondary" />
-                  </Button>
-                  <Button
-                    variant="light"
-                    onClick={nextImage}
-                    className="position-absolute end-3 top-50 translate-middle-y rounded-circle bg-white bg-opacity-80"
-                    style={{ padding: '0.5rem' }}
-                  >
-                    <ChevronRight size={20} className="text-secondary" />
-                  </Button>
-                </>
-              )}
-            </div>
-          </Col>
+            )}
 
-          {/* Content Section */}
-          <Col md={4} className="p-4">
-            <div className="h-100 overflow-auto">
-              <h2 className="mb-4 fw-semibold">{post.title}</h2>
-              <p className="text-secondary">{post.content}</p>
-            </div>
-          </Col>
-        </Row>
+            {/* החץ הימני */}
+            {post.images.length > 1 && (
+              <button
+                onClick={nextImage}
+                style={{
+                  position: 'absolute',
+                  right: '20px',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  background: 'rgba(255, 255, 255, 0.8)',
+                  border: 'none',
+                  borderRadius: '50%',
+                  width: '40px',
+                  height: '40px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer',
+                  zIndex: 1,
+                  boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                }}
+              >
+                <ChevronRight size={24} />
+              </button>
+            )}
 
-        {/* Close Button */}
-        <Button
-          variant="light"
-          onClick={onClose}
-          className="position-absolute top-3 end-3 rounded-circle bg-white bg-opacity-80"
-          style={{ padding: '0.5rem' }}
-        >
-          <X size={20} className="text-secondary" />
-        </Button>
-      </Container>
+            {/* אינדיקטור לכמות התמונות */}
+            {post.images.length > 1 && (
+              <div
+                style={{
+                  position: 'absolute',
+                  bottom: '20px',
+                  left: '50%',
+                  transform: 'translateX(-50%)',
+                  background: 'rgba(255, 255, 255, 0.8)',
+                  padding: '4px 12px',
+                  borderRadius: '20px',
+                  fontSize: '14px'
+                }}
+              >
+                {currentImageIndex + 1} / {post.images.length}
+              </div>
+            )}
+          </div>
+          
+          {/* אזור הטקסט - עם גלילה */}
+          <div 
+            className="col-4"
+            style={{ 
+              height: '100%',
+              overflowY: 'auto',
+              padding: '40px'
+            }}
+          >
+            <h2 style={{
+              fontSize: '24px',
+              fontWeight: 'bold',
+              marginBottom: '20px'
+            }}>
+              {post.title}
+            </h2>
+            <div style={{
+              fontSize: '16px',
+              lineHeight: '1.6',
+              color: '#666'
+            }}>
+              {post.description}
+            </div>
+          </div>
+        </div>
+      </Modal.Body>
     </Modal>
   );
 };
