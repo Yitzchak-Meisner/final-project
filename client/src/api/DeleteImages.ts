@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 
-export async function deleteImage(id) {
+export async function deleteImage(id: string) {
 
     const token = localStorage.getItem('token');
 
@@ -17,6 +17,6 @@ export async function deleteImage(id) {
 
         return response.data;
     } catch (error) {
-        throw new Error('Error deleting image: ' + error.message);
+        throw new Error('Error deleting image: ' + (error as Error).message);
     }
 }

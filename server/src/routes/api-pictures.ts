@@ -1,22 +1,20 @@
 import express from 'express';
-// import { v4 as uuidv4 } from 'uuid';
 import { authorizeAdmin } from '../middlewares/authorizeAdmin'
 
 import pool from '../db/db.js';
 const router = express.Router();
 
 router.post('/upload', authorizeAdmin, async (req, res) => {
-    // const id = uuidv4();
     const { image, category } = req.body;
+    // console.log(req.body);
 
     try {
-      // שמירת המידע ב-DB
       const result = await pool.query(
         'INSERT INTO images ( url, category, created_at) VALUES ($1, $2, NOW()) RETURNING *;',
         [ image, category]
       );
 
-      res.status(201).send(result.rows[0]); // מחזיר את השורה שנשמרה
+      res.status(201).send(result.rows[0]);
     } catch (err) {
       console.error('Error saving image:', err);
       res.status(500).send('Server Error');

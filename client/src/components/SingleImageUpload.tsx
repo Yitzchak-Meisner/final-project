@@ -3,7 +3,7 @@ import { Form } from 'react-bootstrap';
 import axios from 'axios';
 import styles from '../styles/UploadStyles.module.css';
 import { links } from '../data';
-import ImageUploader from './try3';
+import ImageUploader from './ImageUploader';
 
 interface SingleImageUploadProps {
     defaultCategory?: string;
@@ -27,7 +27,7 @@ const SingleImageUpload: React.FC<SingleImageUploadProps> = ({ defaultCategory }
 
         try {
             await axios.post('http://localhost:3000/api/pictures/upload', {
-                image,
+                image: image[0],
                 category: selectedCategory
             }, {
                 headers: {
@@ -61,7 +61,7 @@ const SingleImageUpload: React.FC<SingleImageUploadProps> = ({ defaultCategory }
                 </Form.Select>
             </Form.Group>
             <ImageUploader 
-                onImageUpload={(file) => console.log('תמונה הועלתה:', file)} 
+                onImageUpload={(uploadedImage) => setImage(uploadedImage)} 
                 multiple={false} 
             />
 

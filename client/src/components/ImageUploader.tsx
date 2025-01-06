@@ -49,13 +49,22 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImageUpload, multiple =
     newImages.forEach(file => {
       const reader = new FileReader(); // יצירת FileReader לקריאת הקובץ
       reader.onload = (e) => {
-        setImages(prevImages => multiple ? [...prevImages, e.target?.result as string] : [e.target?.result as string]); // עדכון ה-state עם כתובת התמונה
+        setImages(prevImages => {
+          const updatedImages = multiple
+            ? [...prevImages, e.target?.result as string]
+            : [e.target?.result as string];
+
+          onImageUpload(updatedImages);
+
+          return updatedImages;
+        });
       };
+  
+      // קריאה חזרה ל-props שהועברו עם התמונות שהועלו
+      // onImageUpload(multiple ? images : images[0]);
+      
       reader.readAsDataURL(file); // קריאת תוכן הקובץ
     });
-
-    // קריאה חזרה ל-props שהועברו עם התמונות שהועלו
-    onImageUpload(multiple ? newImages : newImages[0]);
   };
 
   // פונקציה להסרת תמונה מהרשימה
@@ -88,11 +97,15 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImageUpload, multiple =
                 </div>
             ) : (
                 <Row>
-                    {images.length < (maxImages || 1) && (
-                        <p style={{ marginBottom: '10px' }}>
-                            ניתן להוסיף {maxImages ? `עוד ${maxImages - images.length} תמונות` : 'תמונה אחת נוספת'}.
-                        </p>
-                    )}
+                  {images.length >= maxImages ? (
+                    <p style={{ color: 'red', marginBottom: '10px' }}>
+                      הגעת למגבלת התמונות המותרת.
+                    </p>
+                  ) : (
+                    <p style={{ marginBottom: '10px' }}>
+                      ניתן להוסיף {maxImages ? `עוד ${maxImages - images.length} תמונות` : 'תמונה אחת נוספת'}.
+                    </p>
+                  )}
                 {/* תצוגת רשימת התמונות */}
                 {images.map((image, index) => (
                 <Col key={index} xs={6} md={4} lg={3} className="position-relative" onClick={(e) => e.stopPropagation()}>

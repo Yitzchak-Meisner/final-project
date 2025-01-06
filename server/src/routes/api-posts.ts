@@ -88,6 +88,70 @@ router.get('/', async (req, res) => {
     }
 });
 
+// Add this endpoint to api-posts.ts
+
+router.delete('/:id', authorizeAdmin, async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const { keepImages } = req.query;
+  const client = await pool.connect();
+
+  try {
+    await client.query('BEGIN');
+
+    if (keepImages === 'true') {
+      // Update images to remove post_id reference but keep the images
+      await client.query(
+        'UPDATE images SET post_id = NULL WHERE post_id = $1',
+        [id]
+      );
+    } else {
+      // Delete all images associated with the post
+      await client.query('DELETE FROM images WHERE post_id = $1', [id]);
+    }
+
+    // Delete the post
+    const result = await client.query('DELETE FROM posts WHERE id = $1 RETURNING *', [id]);
+
+    if (result.rowCount === 0) {
+      await client.query('ROLLBACK');
+      res.status(404).json({ error: 'Post not found' });
+      return;
+    }
+
+    await client.query('COMMIT');
+    res.json({ message: 'Post deleted successfully' });
+  } catch (error) {
+    await client.query('ROLLBACK');
+    console.error('Error deleting post:', error);
+    res.status(500).json({ error: 'Error deleting post' });
+  } finally {
+    client.release();
+  }
+});
+
+
+router.get('/latest', async (req, res) => {
+  const page = parseInt(req.query.page as string) || 1;
+  const limit = parseInt(req.query.limit as string) || 5;
+  const offset = (page - 1) * limit;
+
+  try {
+    const query = `
+      SELECT p.id, p.title, p.description, p.category, p.created_at, 
+             json_agg(i.url) AS images
+      FROM posts p
+      LEFT JOIN images i ON p.id = i.post_id
+      GROUP BY p.id
+      ORDER BY p.created_at DESC
+      LIMIT $1 OFFSET $2;
+    `;
+    const result = await pool.query(query, [limit, offset]);
+    res.status(200).json(result.rows);
+  } catch (error) {
+    console.error('Error fetching latest posts:', error);
+    res.status(500).json({ error: 'שגיאה בשליפת הפוסטים האחרונים' });
+  }
+});
 
 
 export default router;

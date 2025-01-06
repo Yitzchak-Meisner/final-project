@@ -3,19 +3,14 @@ import { Form, Button, Alert } from 'react-bootstrap';
 import axios from 'axios';
 import '../styles/ImageUpload.css';
 import { links } from '../data';
-import ImageUploader from '../components/try3';
-// import { handleImageUpload } from '../utils/imageUtils';
-
-// interface PostUploadProps {
-//   category: string;
-// }
+import ImageUploader from './ImageUploader';
 
 const PostUpload: React.FC<{ defaultCategory?: string }> = ({ defaultCategory }) => {
     const [formData, setFormData] = useState({
       title: '',
       description: '',
       category: defaultCategory || '',
-      images: [] as string[]
+      images: [] as (string | File)[]
     });
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
@@ -87,10 +82,12 @@ const PostUpload: React.FC<{ defaultCategory?: string }> = ({ defaultCategory })
         </Form.Select>
       </Form.Group>
       <ImageUploader 
-        onImageUpload={(files) => console.log('תמונות הועלו:', files)} 
+        onImageUpload={(uploadedImages) => { 
+        setFormData((prev) => ({ ...prev, images: Array.isArray(uploadedImages) ? uploadedImages : [uploadedImages]}));}}
         multiple={true}
         maxImages={20}
       />
+
       <Button type="submit" className="mt-3" disabled={loading}>
         {loading ? 'יוצר פוסט...' : 'צור פוסט'}
       </Button>

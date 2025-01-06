@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Navbar, Container, Nav, Button } from 'react-bootstrap';
 import { navLinks } from '../data/index';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { User, LogOut } from 'lucide-react';
 import '../styles/Navbar.css';
 
@@ -10,6 +10,7 @@ const NavbarComponent = () => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const navigate = useNavigate();
+  const isHomePage = useLocation().pathname === '/';
 
    // בדוק את סטטוס ההתחברות בעת הטעינה ומתי משתנה ה localStorage
    useEffect(() => {
@@ -62,10 +63,11 @@ const NavbarComponent = () => {
   }, []);
 
   return (
-    <div>
+    <div style={{ position: 'absolute', width: '100%', zIndex: 1000 }}>
       <Navbar // הקונטיינר הראשי לניווט
         expand='xl'
-        className={`navbar-custom ${changeColor ? 'color-active' : ''}`}
+        fixed='top'
+        className={`navbar-custom ${isHomePage ? 'home-page' : 'not-home-page'} ${changeColor ? 'color-active' : ''}`}
       >
         <Container fluid className="flex-row-reverse">
         {isLoggedIn ? (
@@ -81,7 +83,7 @@ const NavbarComponent = () => {
           )}
             <Navbar.Toggle aria-controls='basic-navbar-nav'/>{/*  כפתור לפתיחה/סגירה של התפריט במסכים קטנים */}
           <Navbar.Brand href='/' className='order-xl-1'> {/* מציג את לוגו/שם המותג */}
-            <img src='/logo.png' alt='ציפי שטיין - עיצובי ברים' />
+            <img src='/logo2.png' alt='ציפי שטיין - עיצובי ברים' className='navbar-logo' />
           </Navbar.Brand>
           <Navbar.Collapse id='basic-navbar-nav'> {/* אזור שנפתח/נסגר על ידי ה-Toggle, מחזיק את הניווט */}
             <Nav className='mx-auto'> {/* מכולה לפריטי נווט (Nav Items) */}

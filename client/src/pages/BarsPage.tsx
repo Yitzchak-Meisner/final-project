@@ -2,7 +2,7 @@ import { Outlet, Link } from 'react-router-dom';
 
 const Bars = () => {
   return (
-    <div>
+    <div style={{ paddingTop: '100px' }}>
       <h1>Bars Section</h1>
       <nav>
         <Link to='/categories/floor-bar'>בר ריצפתי</Link>

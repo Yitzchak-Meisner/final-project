@@ -1,4 +1,3 @@
-// HeroSection.jsx
 import { useState, useEffect } from "react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import '../styles/HeroSection.css';

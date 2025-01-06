@@ -1,4 +1,3 @@
-// TestimonialCarousel.tsx
 import { useState, useEffect } from "react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import styles from '../styles/TestimonialCarousel.module.css';
@@ -13,18 +12,18 @@ const testimonials: Testimonial[] = [
   {
     text: "An absolutely incredible experience. The attention to detail is remarkable.",
     author: "Sarah Johnson",
-    role: "Creative Director"
+    role: "Creative Director",
   },
   {
     text: "The design quality exceeded our expectations. Truly outstanding work.",
     author: "Michael Chen",
-    role: "Product Manager"
+    role: "Product Manager",
   },
   {
     text: "Innovative solutions delivered with exceptional professionalism.",
     author: "Emma Thompson",
-    role: "Marketing Director"
-  }
+    role: "Marketing Director",
+  },
 ];
 
 const TestimonialCarousel = () => {
@@ -42,17 +41,13 @@ const TestimonialCarousel = () => {
 
   return (
     <div className={styles.carouselContainer}>
-      <div className={styles.carouselWrapper}>
-        <div className={styles.carouselContent}>
-          <div 
-            className={styles.carouselTrack}
-            style={{ transform: `translateX(-${current * 100}%)` }}
-          >
+      <div className={styles.carouselInner}>
+        <div className={styles.carouselTrack}>
+          <div className={styles.carouselSlides}>
             {testimonials.map((testimonial, index) => (
               <div
                 key={index}
-                className={styles.testimonialSlide}
-                style={{ opacity: index === current ? 1 : 0 }}
+                className={`${styles.carouselSlide} ${index === current ? styles.active : ''}`}
               >
                 <div className={styles.testimonialContent}>
                   <p className={styles.testimonialText}>{testimonial.text}</p>
@@ -66,19 +61,21 @@ const TestimonialCarousel = () => {
               </div>
             ))}
           </div>
-          <button
-            onClick={prev}
-            className={`${styles.carouselButton} ${styles.prevButton}`}
-          >
-            <ArrowLeft className={styles.buttonIcon} />
-          </button>
-          <button
-            onClick={next}
-            className={`${styles.carouselButton} ${styles.nextButton}`}
-          >
-            <ArrowRight className={styles.buttonIcon} />
-          </button>
         </div>
+        <button
+          onClick={prev}
+          className={`${styles.carouselButton} ${styles.prevButton}`}
+          aria-label="Previous testimonial"
+        >
+          <ArrowLeft className={styles.arrowIcon} />
+        </button>
+        <button
+          onClick={next}
+          className={`${styles.carouselButton} ${styles.nextButton}`}
+          aria-label="Next testimonial"
+        >
+          <ArrowRight className={styles.arrowIcon} />
+        </button>
       </div>
     </div>
   );

@@ -17,6 +17,7 @@ export async function fetchImagesByCategory(category: string): Promise<Image[]> 
         });
         return response.data;
     } catch (error) {
-        throw new Error('Error fetching images: ' + error.message);
+        console.error('Error fetching images: ' + error);
+        return [];
     }
 }
