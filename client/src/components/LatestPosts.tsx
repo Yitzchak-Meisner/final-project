@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Container } from 'react-bootstrap';
-import PostsGallery from '../garbage/lovable/PostsGallery';
+import PostsGallery from './PostsGallery';
 import { fetchLatestPosts } from '../api/FetchingPosts';
 import styles from '../styles/LatestPosts.module.css';
 

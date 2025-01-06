@@ -4,10 +4,10 @@ import { useLoaderData, useParams } from "react-router-dom";
 import { translateKeyValue } from "../data/index";
 import type { Params } from "react-router-dom";
 import { useEffect, useState } from "react";
-import PostPopup from "../components/PostPopup";
+import PostPopup from "../garbage/PostPopup2";
 import PlusButton from "../components/PlusButton";
 import { Container, Row, Col, Card } from "react-bootstrap";
-import GalleryTabs from "../garbage/lovable/GalleryTabs";
+import GalleryTabs from "../components/GalleryTabs";
 import { fetchPostsByCategory } from "../api/FetchingPosts";
 
 

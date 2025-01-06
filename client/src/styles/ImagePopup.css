@@ -1,0 +1,18 @@
+.image-popup-modal .modal-content {
+    background-color: transparent;
+    border: none;
+  }
+  
+  .image-popup-modal .modal-dialog {
+    max-width: 90vw;
+    margin: 1.75rem auto;
+  }
+  
+  .image-popup-modal .btn-light {
+    background-color: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(4px);
+  }
+  
+  .image-popup-modal .btn-light:hover {
+    background-color: rgba(255, 255, 255, 0.9);
+  }
