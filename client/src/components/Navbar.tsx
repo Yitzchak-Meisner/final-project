@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Navbar, Container, Nav, Button } from 'react-bootstrap';
 import { navLinks } from '../data/index';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { User, LogOut } from 'lucide-react';
 import '../styles/Navbar.css';
 
@@ -10,6 +10,7 @@ const NavbarComponent = () => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const navigate = useNavigate();
+  const isHomePage = useLocation().pathname === '/';
 
    // בדוק את סטטוס ההתחברות בעת הטעינה ומתי משתנה ה localStorage
    useEffect(() => {
@@ -66,7 +67,7 @@ const NavbarComponent = () => {
       <Navbar // הקונטיינר הראשי לניווט
         expand='xl'
         fixed='top'
-        className={`navbar-custom ${changeColor ? 'color-active' : ''}`}
+        className={`navbar-custom ${isHomePage ? 'home-page' : 'not-home-page'} ${changeColor ? 'color-active' : ''}`}
       >
         <Container fluid className="flex-row-reverse">
         {isLoggedIn ? (

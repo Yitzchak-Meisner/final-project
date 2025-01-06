@@ -55,7 +55,7 @@ const ContactUs = () => {
 
   return (
     <div className="contact-us-page">
-      <Container fluid>
+      <Container fluid style={{ paddingTop: '100px' }}>
         <Row className="justify-content-center">
           <Col xs={12} sm={10} md={8} lg={6} xl={5}>
             <div className='form-container'>

@@ -54,7 +54,7 @@ const handleDeleteMessage = async (id: number) => {
 
     return (
       <div className="container mt-4">
-        <div className="d-flex justify-content-between align-items-center mb-4">
+        <div className="d-flex justify-content-between align-items-center mb-4" style={{ paddingTop: '100px' }}>
           <h2>ניהול הודעות</h2>
           
           <div className="filter-section">
