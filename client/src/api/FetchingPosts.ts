@@ -1,6 +1,13 @@
 import axios from "axios";
 
-export const fetchPostsByCategory = async (category: string) => {
+export interface Post {
+  id: string;
+  title: string;
+  description: string;
+  images: string[];
+}
+
+export const fetchPostsByCategory = async (category: string): Promise<Post[]> => {
     try {
       const response = await axios.get('http://localhost:3000/api/posts', {
         params: { category }

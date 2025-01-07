@@ -1,15 +1,8 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { Container } from 'react-bootstrap';
-import PostsGallery from './PostsGallery';
-import { fetchLatestPosts } from '../api/FetchingPosts';
+import { Container, Card, Row, Col } from 'react-bootstrap';
+import PostPopup from './PostPopup';
+import { fetchLatestPosts, Post } from '../api/FetchingPosts';
 import styles from '../styles/LatestPosts.module.css';
-
-interface Post {
-  id: string;
-  title: string;
-  description: string;
-  images: string[];
-}
 
 const LatestPosts = () => {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -17,12 +10,16 @@ const LatestPosts = () => {
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [selectedPost, setSelectedPost] = useState<Post | null>(null);
+  const [showPopup, setShowPopup] = useState(false);
   const lastPostRef = useRef<HTMLDivElement>(null);
+  const isFetching = useRef(false);
   const POSTS_PER_PAGE = 5;
 
   const loadPosts = useCallback(async () => {
-    if (loading || !hasMore) return;
-    
+    if (loading || !hasMore || isFetching.current) return;
+
+    isFetching.current = true;
     try {
       setLoading(true);
       setError(null);
@@ -31,36 +28,34 @@ const LatestPosts = () => {
       
       if (newPosts.length < POSTS_PER_PAGE) {
         setHasMore(false);
+      } else {
+        setPage(prev => prev + 1);
       }
       
       setPosts(prevPosts => {
-        // Remove duplicates based on post ID
         const uniquePosts = [...prevPosts, ...newPosts].filter(
           (post, index, self) => index === self.findIndex(p => p.id === post.id)
         );
         return uniquePosts;
       });
-      
-      setPage(prev => prev + 1);
     } catch (error) {
-      console.error('Error loading posts:', error);
       setError('Failed to load posts. Please try again later.');
     } finally {
       setLoading(false);
+      isFetching.current = false;
     }
   }, [page, loading, hasMore]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       entries => {
-        // Load more posts when the last post becomes visible
         if (entries[0].isIntersecting && hasMore && !loading) {
           loadPosts();
         }
       },
       {
-        root: null, // Use viewport as root
-        rootMargin: '100px', // Start loading before the element is visible
+        root: null,
+        rootMargin: '100px',
         threshold: 0.1
       }
     );
@@ -72,18 +67,23 @@ const LatestPosts = () => {
     return () => observer.disconnect();
   }, [loadPosts, hasMore, loading]);
 
-  // Initial load
   useEffect(() => {
     loadPosts();
   }, []);
 
-  const handlePostDeleted = (deletedPostId: string) => {
-    setPosts(prevPosts => prevPosts.filter(post => post.id !== deletedPostId));
+  const handlePostClick = (post: Post) => {
+    setSelectedPost(post);
+    setShowPopup(true);
+  };
+
+  const handleClosePopup = () => {
+    setShowPopup(false);
+    setSelectedPost(null);
   };
 
   return (
     <Container fluid className={styles.container}>
-      <h2 className={styles.title}>הפוסטים האחרונים שלנו</h2>
+      <h2 className={styles.title}>האירועים האחרונים שלנו</h2>
       
       {error && (
         <div className={styles.error}>
@@ -95,16 +95,30 @@ const LatestPosts = () => {
         <div className={styles.scrollWrapper}>
           {posts.map((post, index) => (
             <div 
-              key={post.id} 
+              key={post.id}
               className={styles.postCard}
               ref={index === posts.length - 1 ? lastPostRef : null}
+              onClick={() => handlePostClick(post)}
             >
-              <div className={styles.postContent}>
-                <PostsGallery 
-                  posts={[post]}
-                  onPostDeleted={() => handlePostDeleted(post.id)}
-                />
-              </div>
+              <Card className={styles.card}>
+                <div className={styles.imageContainer}>
+                  {post.images[0] && (
+                    <Card.Img
+                      src={post.images[0]}
+                      alt={post.title}
+                      className={styles.cardImage}
+                    />
+                  )}
+                </div>
+                <Card.Body className={styles.cardBody}>
+                  <Card.Title className={styles.cardTitle}>
+                    {post.title}
+                  </Card.Title>
+                  <Card.Text className={styles.cardText}>
+                    {post.description}
+                  </Card.Text>
+                </Card.Body>
+              </Card>
             </div>
           ))}
           
@@ -115,6 +129,14 @@ const LatestPosts = () => {
           )}
         </div>
       </div>
+
+      {selectedPost && (
+        <PostPopup
+          post={selectedPost}
+          show={showPopup}
+          onClose={handleClosePopup}
+        />
+      )}
     </Container>
   );
 };

@@ -3,14 +3,7 @@ import { Card, Row, Col, Container } from 'react-bootstrap';
 import { Trash2 } from 'lucide-react';
 import PostPopup from './PostPopup';
 import DeletePostConfirmation from './DeletePostConfirmation';
-import { deletePost } from '../api/FetchingPosts';
-
-interface Post {
-  id: string;
-  title: string;
-  description: string;
-  images: string[];
-}
+import { deletePost, Post } from '../api/FetchingPosts';
 
 const PostsGallery: React.FC<{ posts: Post[], onPostDeleted?: () => void }> = ({ posts, onPostDeleted }) => {
   const [selectedPost, setSelectedPost] = useState<Post | null>(null);
@@ -76,7 +69,6 @@ const PostsGallery: React.FC<{ posts: Post[], onPostDeleted?: () => void }> = ({
                   width: '40px',
                   height: '40px'
                 }}>
-                  {/* כאן אפשר להוסיף אייקון תמונה כברירת מחדל */}
                 </div>
                 {post.images[0] && (
                   <Card.Img
