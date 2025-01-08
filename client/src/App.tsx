@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom';
 import './App.css'
 import Home from './pages/HomePage';
@@ -9,6 +10,7 @@ import LogIn from './pages/LogInPage';
 import MessagesDashboard, { loader as messagesLoader } from './pages/MessagesDashboardPage';
 import { latestPostsLoader } from './components/LatestPosts';
 import NavbarComponent from './components/Navbar';
+import { setupTokenInterceptor } from './utils/tokenInterceptor';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Layout = () => (
@@ -36,6 +38,10 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
+
+  useEffect(() => {
+    setupTokenInterceptor();
+  }, []);
 
   return (
     <>
