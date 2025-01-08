@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
+import { Container, Row, Col, Button} from "react-bootstrap";
 import { ArrowLeft, ArrowRight } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import '../styles/HeroSection.css';
 
 const images = [
@@ -10,6 +12,8 @@ const images = [
 
 const HeroSection = () => {
   const [currentImage, setCurrentImage] = useState(0);
+
+  let navigate = useNavigate();
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -23,6 +27,7 @@ const HeroSection = () => {
 
   return (
     <div className="hero-container">
+      <div className="slides-container">
       {images.map((src, index) => (
         <div
           key={src}
@@ -33,32 +38,80 @@ const HeroSection = () => {
             alt={`Slide ${index + 1}`}
             loading={index === 0 ? "eager" : "lazy"}
           />
-          <div className="overlay" />
-        </div>
+          <div className="slide-overlay" />
+          </div>
       ))}
-      
-      <div className="content">
-        <div className="text-content">
-          <h1>Discover Excellence</h1>
-          <p>Experience design at its finest</p>
-          <button className="explore-button">
-            Explore Now
-          </button>
-        </div>
       </div>
+      
 
-      <button
-        onClick={prevImage}
-        className="nav-button prev"
-      >
-        <ArrowLeft className="arrow" />
+      <Container className="hero-content">
+        <Row className="justify-content-center">
+          <Col md={10} lg={8} className="text-center">
+            <div className="content-box">
+              <h1 className="main-title">ציפי שטיין - עיצוב אירועים</h1>
+              <p className="subtitle">יוצרים רגעים בלתי נשכחים</p>
+              <div className="button-group">
+                <Button 
+                  variant="primary" 
+                  className="hero-btn primary"
+                  onClick={() => navigate("/about")}
+                >
+                  אודותינו
+                </Button>
+                <Button
+                  variant="outline-primary"
+                  className="hero-btn secondary"
+                  onClick={() => navigate("/contact-us")}
+                >
+                  ליצירת קשר
+                </Button>
+              </div>
+            </div>
+          </Col>
+        </Row>
+      </Container>
+
+      <button className="nav-btn prev" onClick={prevImage}>
+        <ArrowLeft size={24} />
       </button>
-      <button
-        onClick={nextImage}
-        className="nav-button next"
-      >
-        <ArrowRight className="arrow" />
+      <button className="nav-btn next" onClick={nextImage}>
+        <ArrowRight size={24} />
       </button>
+
+
+      {/* <Container className="hero-content">
+        <Row className="justify-content-center">
+          <Col md={10} lg={8} className="text-center">
+            <div className="content-box">
+              <h1 className="main-title">ציפי שטיין - עיצוב אירועים</h1>
+              <p className="subtitle">יוצרים רגעים בלתי נשכחים</p>
+              <div className="button-group">
+                <Button 
+                  variant="primary" 
+                  className="hero-btn primary"
+                  onClick={() => navigate("/about")}
+                >
+                  אודותינו
+                </Button>
+                <Button
+                  variant="outline-primary"
+                  className="hero-btn secondary"
+                  onClick={() => navigate("/contact-us")}
+                >
+                  ליצירת קשר
+                </Button>
+              </div>
+            </div>
+          </Col>
+        </Row>
+      </Container>
+
+      <button className="nav-btn prev" onClick={prevImage}>
+        <ArrowLeft size={24} />
+      </button>
+      <button className="nav-btn next" onClick={nextImage}>
+        <ArrowRight size={24} />
+      </button> */}
     </div>
   );
 };

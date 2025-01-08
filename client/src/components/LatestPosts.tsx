@@ -1,12 +1,14 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { Container, Card, Row, Col } from 'react-bootstrap';
+import { Container, Card } from 'react-bootstrap';
 import PostPopup from './PostPopup';
 import { fetchLatestPosts, Post } from '../api/FetchingPosts';
+import { useLoaderData } from 'react-router-dom';
 import styles from '../styles/LatestPosts.module.css';
 
 const LatestPosts = () => {
-  const [posts, setPosts] = useState<Post[]>([]);
-  const [page, setPage] = useState(1);
+  const initialPosts = useLoaderData<Post[]>(); // קבלת הפוסטים הראשונים
+  const [posts, setPosts] = useState<Post[]>(initialPosts || []);
+  const [page, setPage] = useState(2); // התחל מעמוד 2, כי הראשון נטען מראש
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -68,6 +70,7 @@ const LatestPosts = () => {
   }, [loadPosts, hasMore, loading]);
 
   useEffect(() => {
+    if (initialPosts && initialPosts.length > 0) return; // דלג אם הנתונים כבר קיימים
     loadPosts();
   }, []);
 
@@ -82,9 +85,13 @@ const LatestPosts = () => {
   };
 
   return (
-    <Container fluid className={styles.container}>
-      <h2 className={styles.title}>האירועים האחרונים שלנו</h2>
-      
+    <Container fluid className={`${styles.container} w-100 min-vh-100`}>
+      <div className={styles.title}>
+        <h1 className='text-center fw-bold'>האירועים האחרונים שלנו</h1>
+        <p className='text-center'>
+          באפשרותכם להתרשם מהביצועים הכי מרשימים שלנו
+        </p>
+      </div>
       {error && (
         <div className={styles.error}>
           {error}
@@ -140,5 +147,15 @@ const LatestPosts = () => {
     </Container>
   );
 };
+
+export const latestPostsLoader = async () => {
+  try {
+    const posts = await fetchLatestPosts(1); // הבאת עמוד אחד (5 פוסטים)
+    return posts;
+  } catch (error) {
+    throw new Response('Failed to load posts', { status: 500 });
+  }
+};
+
 
 export default LatestPosts;

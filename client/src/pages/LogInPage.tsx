@@ -44,7 +44,7 @@ const LoginPage = () => {
   };
 
   return (
-    <Container className="mt-5" style={{ minHeight: '100vh' , paddingTop: '100px' }}>
+    <Container className="mt-5" style={{ minHeight: '100vh' , paddingTop: '100px'}}>
       <Row className="justify-content-center align-items-center">
         <Col md={6} lg={5}>
           <Card 
