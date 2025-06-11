@@ -9,50 +9,56 @@ import PlusButton from "../components/PlusButton";
 import { Container, Row, Col, Card } from "react-bootstrap";
 import GalleryTabs from "../components/GalleryTabs";
 import { fetchPostsByCategory } from "../api/FetchingPosts";
+import '../styles/Categories.css';
 
 
 export default function Categories() {
 
   const imagesFromDB = useLoaderData();
+  const { category } = useParams<{ category: string }>();
 
-  const { category } = useParams<{ category: string }>(); // שליפת הקטגוריה ישירות מה-URL
-  
+  // סטייטים לניהול המידע
   const [images, setImages] = useState<Image[]>(imagesFromDB);
   const [displayMode, setDisplayMode] = useState<'images' | 'posts'>('images');
   const [posts, setPosts] = useState([]);
-  const [selectedPost, setSelectedPost] = useState(null); // שמירת הפוסט שנבחר עבור הפופאפ
-  
-  
+  const [isPostsLoaded, setIsPostsLoaded] = useState(false); // סטייט חדש לניהול מצב טעינת הפוסטים
+  const [selectedPost, setSelectedPost] = useState(null);
+
+  // עדכון התמונות כאשר משתנה ה-loader
   useEffect(() => {
     setImages(imagesFromDB);
-  } , [imagesFromDB]);
+  }, [imagesFromDB]);
 
-
+  // טעינת פוסטים - רק בפעם הראשונה שעוברים למצב פוסטים
   useEffect(() => {
-    if (displayMode === 'posts') {
-        const fetchPosts = async () => {
-        console.log( "Fetching posts for category:", category);
-        const posts = await fetchPostsByCategory(category!);
-        console.log("Fetched posts:", posts);
-        setPosts(posts);
-      };
-      fetchPosts();
-    }
-  }, [displayMode, images]);
-  
+    const loadPosts = async () => {
+      if (displayMode === 'posts' && !isPostsLoaded) {
+        try {
+          const fetchedPosts = await fetchPostsByCategory(category!);
+          setPosts(fetchedPosts);
+          setIsPostsLoaded(true); // מסמן שהפוסטים נטענו
+        } catch (error) {
+          console.error("Error fetching posts:", error);
+        }
+      }
+    };
+
+    loadPosts();
+  }, [displayMode, category, isPostsLoaded]);
+
+  // פונקציה למחיקת תמונה
   const handleDelete = async (imageId: string) => {
     try {
-      await deleteImage(imageId); // מחיקה מהשרת
-      setImages((prevImages) => prevImages.filter((img) => img.id !== imageId)); // עדכון ה-State
+      await deleteImage(imageId);
+      setImages((prevImages) => prevImages.filter((img) => img.id !== imageId));
     } catch (error) {
       console.error("Error deleting image:", error);
     }
   };
-  
 
   return (
-    <Container style={{ paddingTop: '100px' }}>
-      <div className="d-flex justify-content-between align-items-center mb-4">
+    <Container className="categories-container">
+      <div className="categories-header">
         <h1>{translateKeyValue(category as string)}</h1>
       </div>
       
@@ -63,30 +69,27 @@ export default function Categories() {
         setDisplayMode={setDisplayMode}
       />
   
-      {selectedPost && ( // הצגת הפופאפ אם יש פוסט שנבחר
+      {selectedPost && (
         <PostPopup
           post={selectedPost}
-          onClose={() => setSelectedPost(null)} // סגירת הפופאפ
+          onClose={() => setSelectedPost(null)}
         />
       )}
       <PlusButton currentCategory={category} />
     </Container>
   );
-    
 }
 
 export async function loader({ params }: { params: Params<string>}) {
   const category = params.category;
-
   if (!category) {
     throw new Error('No category specified.');
   }
-
 
   try {
     return await fetchImagesByCategory(category);
   } catch (error) {
     console.error('Error in loader:', error);
-    return []; // מחזיר מערך ריק במקום לזרוק שגיאה
+    return [];
   }
 }

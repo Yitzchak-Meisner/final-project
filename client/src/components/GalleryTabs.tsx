@@ -24,17 +24,14 @@ interface GalleryTabsProps {
 const GalleryTabs: React.FC<GalleryTabsProps> = ( { images, deleteImg, posts, setDisplayMode }) => { 
 
   return ( 
-    <div className="container pt-5"> 
-
+    <div className="tabs-container"> {/* החלפת container לקלאס מותאם */}
       <Tabs
         defaultActiveKey="photos" 
         onSelect={(key) => {
-          console.log("Switched to tab:", key);
           setDisplayMode(key === "photos" ? "images" : "posts");
         }}
-
-        className="mb-3 justify-content-center" 
-        fill 
+        className="mb-3 gallery-tabs"
+        fill
       >
 
         <Tab eventKey="photos" title={<span>תמונות {<Grid3X3 />}</span>}> 
